@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"; // <--- ADD THIS LINE
+
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { db } from "@/db";
