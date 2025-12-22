@@ -101,7 +101,7 @@ export default async function Home() {
 
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-2 rounded-full transition-all">
+              <button className="bg-transparent border border-blue-500 text-white font-bold px-6 py-2 rounded-full transition-all">
                 {tNav("signInToPost")}
               </button>
             </SignInButton>
