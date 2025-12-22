@@ -66,7 +66,7 @@ export default function UploadPage() {
                 placeholder={t("toolUsedPlaceholder")}
                 required
                 list="tools-list"
-                className="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white text-base"
+                className="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white text-base min-h-[44px]"
               />
               <datalist id="tools-list">
                 {tools.map(tool => (
@@ -84,7 +84,7 @@ export default function UploadPage() {
                 placeholder={t("beverageBrandPlaceholder")}
                 required
                 list="brands-list"
-                className="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white text-base"
+                className="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white text-base min-h-[44px]"
               />
               <datalist id="brands-list">
                 {brands.map(brand => (

@@ -82,9 +82,9 @@ export default async function Home() {
     <main className="min-h-screen bg-gray-950 text-white p-4 sm:p-6">
       {/* --- HEADER SECTION --- */}
       <header className="flex flex-col items-center justify-center py-6 md:py-12 border-b border-gray-800">
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-2 text-center sm:text-left px-4">
+        <div className="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left px-4">
           <span className="text-sm sm:text-base whitespace-nowrap">{t("subtitle1")}</span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-0 sm:mb-3 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
             {t("title")}
           </h1>
           <span className="text-sm sm:text-base whitespace-nowrap">{t("subtitle2")}</span>
