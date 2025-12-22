@@ -14,10 +14,15 @@ export default function UploadPage() {
 
   useEffect(() => {
     // Fetch existing tools and brands when component mounts
-    getExistingToolsAndBrands().then(data => {
-      setTools(data.tools);
-      setBrands(data.brands);
-    });
+    getExistingToolsAndBrands()
+      .then(data => {
+        setTools(data.tools);
+        setBrands(data.brands);
+      })
+      .catch(error => {
+        console.error("Failed to fetch tools and brands:", error);
+        // Continue without suggestions if fetch fails
+      });
   }, []);
 
   return (

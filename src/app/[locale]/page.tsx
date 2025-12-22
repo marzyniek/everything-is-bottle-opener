@@ -10,6 +10,7 @@ import { DeleteButton } from "./DeleteButton";
 import { VoteButtons } from "./VoteButtons";
 import { CommentSection } from "./CommentSection";
 import { getTranslations } from "next-intl/server";
+import { groupCommentsByAttempt } from "@/lib/utils";
 
 // Mark function as 'async' so we can fetch data
 export default async function Home() {
@@ -58,13 +59,7 @@ export default async function Home() {
     .orderBy(comments.createdAt);
 
   // Group comments by attemptId for easy lookup
-  const commentsByAttempt = allComments.reduce((acc, comment) => {
-    if (!acc[comment.attemptId]) {
-      acc[comment.attemptId] = [];
-    }
-    acc[comment.attemptId].push(comment);
-    return acc;
-  }, {} as Record<string, typeof allComments>);
+  const commentsByAttempt = groupCommentsByAttempt(allComments);
 
   return (
     <main className="min-h-screen bg-gray-950 text-white p-6">
