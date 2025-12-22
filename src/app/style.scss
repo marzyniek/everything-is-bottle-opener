@@ -336,7 +336,7 @@ $breakpoint-2xl: 1536px;
   display: flex;
   align-items: center;
   gap: $spacing-xs;
-  padding: $spacing-xs ($spacing-sm + $spacing-xs); // 0.25rem + 0.75rem = 1rem horizontal padding
+  padding: $spacing-xs $spacing-sm + $spacing-xs;
   border-radius: $radius-full;
   @include transition-all;
   border: none;
