@@ -1,13 +1,36 @@
 "use server";
 
 import { db } from "@/db";
-import { attempts, users } from "@/db/schema"; // Import 'users' too
-import { auth, currentUser } from "@clerk/nextjs/server"; // Import 'currentUser'
+import { attempts, users, comments, votes } from "@/db/schema";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+
+// Helper function to ensure user exists in database
+async function ensureUserExists(user: Awaited<ReturnType<typeof currentUser>>) {
+  if (!user) throw new Error("You must be logged in");
+
+  const existingUser = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, user.id));
+
+  if (existingUser.length === 0) {
+    if (!user.emailAddresses || user.emailAddresses.length === 0) {
+      throw new Error("User email not found");
+    }
+
+    await db.insert(users).values({
+      id: user.id,
+      email: user.emailAddresses[0].emailAddress,
+      username: user.firstName || "Anonymous",
+    });
+  }
+}
 
 export async function createAttempt(formData: FormData) {
-  const user = await currentUser(); // Get full user details from Clerk
+  const user = await currentUser();
 
   if (!user) throw new Error("You must be logged in");
 
@@ -19,23 +42,8 @@ export async function createAttempt(formData: FormData) {
     throw new Error("Missing fields");
   }
 
-  // --- STEP 1: Ensure User Exists in DB ---
-  // Try to find the user in our DB
-  const existingUser = await db
-    .select()
-    .from(users)
-    .where(eq(users.id, user.id));
+  await ensureUserExists(user);
 
-  // If they don't exist, create them locally
-  if (existingUser.length === 0) {
-    await db.insert(users).values({
-      id: user.id,
-      email: user.emailAddresses[0].emailAddress, // Clerk stores emails in an array
-      username: user.firstName || "Anonymous", // Fallback if no name
-    });
-  }
-
-  // --- STEP 2: Save the Attempt ---
   await db.insert(attempts).values({
     userId: user.id,
     videoUrl: videoUrl,
@@ -69,4 +77,83 @@ export async function deleteAttempt(attemptId: string) {
   await db.delete(attempts).where(eq(attempts.id, attemptId));
 
   redirect("/");
+}
+
+export async function addComment(attemptId: string, content: string) {
+  const user = await currentUser();
+
+  if (!user) throw new Error("You must be logged in");
+
+  await ensureUserExists(user);
+
+  // Get the attempt to find the tool name for revalidation
+  const attempt = await db
+    .select({ toolUsed: attempts.toolUsed })
+    .from(attempts)
+    .where(eq(attempts.id, attemptId));
+
+  if (attempt.length === 0) {
+    throw new Error("Attempt not found");
+  }
+
+  await db.insert(comments).values({
+    userId: user.id,
+    attemptId: attemptId,
+    content: content,
+  });
+
+  revalidatePath("/");
+  revalidatePath("/attempts");
+  revalidatePath(`/attempts/tool/${encodeURIComponent(attempt[0].toolUsed)}`);
+}
+
+export async function addVote(attemptId: string, value: number) {
+  const user = await currentUser();
+
+  if (!user) throw new Error("You must be logged in");
+
+  await ensureUserExists(user);
+
+  // Get the attempt to find the tool name for revalidation
+  const attempt = await db
+    .select({ toolUsed: attempts.toolUsed })
+    .from(attempts)
+    .where(eq(attempts.id, attemptId));
+
+  if (attempt.length === 0) {
+    throw new Error("Attempt not found");
+  }
+
+  // Check if user already voted on this attempt
+  const existingVote = await db
+    .select()
+    .from(votes)
+    .where(and(eq(votes.userId, user.id), eq(votes.attemptId, attemptId)));
+
+  if (existingVote.length > 0) {
+    // Update existing vote
+    if (existingVote[0].value === value) {
+      // If same value, remove vote (toggle off)
+      await db
+        .delete(votes)
+        .where(and(eq(votes.userId, user.id), eq(votes.attemptId, attemptId)));
+    } else {
+      // If different value, update vote
+      await db
+        .update(votes)
+        .set({ value: value })
+        .where(and(eq(votes.userId, user.id), eq(votes.attemptId, attemptId)));
+    }
+  } else {
+    // Create new vote
+    await db.insert(votes).values({
+      userId: user.id,
+      attemptId: attemptId,
+      value: value,
+    });
+  }
+
+  revalidatePath("/");
+  revalidatePath("/attempts");
+  revalidatePath(`/attempts/tool/${encodeURIComponent(attempt[0].toolUsed)}`);
 }
