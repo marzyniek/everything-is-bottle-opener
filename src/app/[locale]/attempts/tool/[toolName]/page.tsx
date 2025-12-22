@@ -14,7 +14,7 @@ import { getTranslations } from "next-intl/server";
 export default async function ToolPage({
   params,
 }: {
-  params: { toolName: string };
+  params: Promise<{ toolName: string }>;
 }) {
   const { userId } = await auth();
   const awaitedParams = await params;
