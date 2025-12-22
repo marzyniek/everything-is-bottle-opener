@@ -65,6 +65,7 @@ $breakpoint-2xl: 1536px;
 }
 
 @mixin gradient-text($from, $to) {
+  color: $from; /* Fallback color */
   background: linear-gradient(to right, $from, $to);
   -webkit-background-clip: text;
   background-clip: text;
