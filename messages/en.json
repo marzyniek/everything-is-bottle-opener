@@ -1,0 +1,69 @@
+{
+  "metadata": {
+    "title": "Everything is a Bottle Opener",
+    "description": "Share your creative bottle opening attempts"
+  },
+  "common": {
+    "by": "by",
+    "anonymous": "Anonymous",
+    "vs": "vs"
+  },
+  "navigation": {
+    "backToFeed": "Back to Feed",
+    "backToAllAttempts": "Back to All Attempts",
+    "signIn": "Sign In",
+    "signInToPost": "Sign In to Post"
+  },
+  "home": {
+    "title": "Bottle Opener 🍾",
+    "viewAllAttempts": "📊 View All Attempts",
+    "uploadNewAttempt": "📹 Upload New Attempt",
+    "latestAttempts": "Latest Attempts",
+    "noAttemptsYet": "No attempts yet. Be the first!",
+    "comment": "comment",
+    "comments": "comments"
+  },
+  "attempts": {
+    "title": "All Attempts 🍾",
+    "totalBottlesOpened": "Total Bottles Opened",
+    "differentToolsUsed": "Different Tools Used",
+    "browseByTool": "Browse by Tool",
+    "noAttemptsYet": "No attempts yet. Be the first!",
+    "attempt": "attempt",
+    "attempts": "attempts",
+    "attemptsWith": "with",
+    "noAttemptsFoundForTool": "No attempts found for this tool."
+  },
+  "upload": {
+    "title": "Upload Your Attempt 🍾",
+    "videoUploaded": "Video uploaded! Now add details.",
+    "error": "Error: {message}",
+    "toolUsed": "Tool Used",
+    "toolUsedPlaceholder": "e.g. Lighter, Spoon",
+    "beverageBrand": "Beverage Brand",
+    "beverageBrandPlaceholder": "e.g. Corona, Coke",
+    "publish": "🚀 Publish"
+  },
+  "comments": {
+    "hide": "Hide",
+    "add": "Add",
+    "comment": "Comment",
+    "writeComment": "Write a comment...",
+    "errorEmpty": "Comment cannot be empty",
+    "errorTooLong": "Comment must be {max} characters or less",
+    "errorSignIn": "Please sign in to comment",
+    "errorNotFound": "This attempt no longer exists",
+    "errorProfile": "User profile incomplete. Please contact support.",
+    "errorGeneric": "Failed to add comment. Please try again."
+  },
+  "votes": {
+    "upvote": "Upvote",
+    "downvote": "Downvote",
+    "errorSignIn": "Please sign in to vote",
+    "errorNotFound": "This attempt no longer exists",
+    "errorGeneric": "Failed to vote. Please try again."
+  },
+  "delete": {
+    "title": "Delete post"
+  }
+}

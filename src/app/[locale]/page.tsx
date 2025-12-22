@@ -2,18 +2,23 @@ export const dynamic = "force-dynamic"; // <--- ADD THIS LINE
 
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { db } from "@/db";
 import { attempts, users, comments, votes } from "@/db/schema";
 import { desc, eq, sql } from "drizzle-orm";
 import { DeleteButton } from "./DeleteButton";
 import { VoteButtons } from "./VoteButtons";
 import { CommentSection } from "./CommentSection";
+import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 // Mark function as 'async' so we can fetch data
 export default async function Home() {
   // Get the current user ID
   const { userId } = await auth();
+  const t = await getTranslations("home");
+  const tCommon = await getTranslations("common");
+  const tNav = await getTranslations("navigation");
 
   // Fetch all attempts + the username of the person who uploaded it + vote counts
   const allAttempts = await db
@@ -43,20 +48,20 @@ export default async function Home() {
       {/* --- HEADER SECTION --- */}
       <header className="flex flex-col items-center justify-center py-12 border-b border-gray-800">
         <h1 className="text-5xl font-extrabold mb-6 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
-          Bottle Opener 🍾
+          {t("title")}
         </h1>
 
         <div className="flex gap-4">
           <Link href="/attempts">
             <button className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-2 rounded-full transition-all">
-              📊 View All Attempts
+              {t("viewAllAttempts")}
             </button>
           </Link>
 
           <SignedOut>
             <SignInButton mode="modal">
               <button className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-2 rounded-full transition-all">
-                Sign In to Post
+                {tNav("signInToPost")}
               </button>
             </SignInButton>
           </SignedOut>
@@ -66,7 +71,7 @@ export default async function Home() {
               <UserButton />
               <Link href="/upload">
                 <button className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-2 rounded-full transition-all flex items-center gap-2">
-                  📹 Upload New Attempt
+                  {t("uploadNewAttempt")}
                 </button>
               </Link>
             </div>
@@ -77,12 +82,12 @@ export default async function Home() {
       {/* --- FEED SECTION --- */}
       <section className="max-w-4xl mx-auto mt-12">
         <h2 className="text-2xl font-bold mb-6 text-gray-300">
-          Latest Attempts
+          {t("latestAttempts")}
         </h2>
 
         {allAttempts.length === 0 ? (
           <div className="text-center text-gray-500 py-20">
-            <p className="text-xl">No attempts yet. Be the first!</p>
+            <p className="text-xl">{t("noAttemptsYet")}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -109,7 +114,7 @@ export default async function Home() {
                         {post.toolUsed}
                       </h3>
                       <p className="text-sm text-gray-400">
-                        vs {post.beverageBrand}
+                        {tCommon("vs")} {post.beverageBrand}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -123,9 +128,9 @@ export default async function Home() {
                   </div>
 
                   <div className="mt-4 pt-4 border-t border-gray-800 flex items-center gap-2 text-sm text-gray-400">
-                    <span>by</span>
+                    <span>{tCommon("by")}</span>
                     <span className="text-blue-400 font-semibold">
-                      @{post.username || "Anonymous"}
+                      @{post.username || tCommon("anonymous")}
                     </span>
                   </div>
 
@@ -137,8 +142,7 @@ export default async function Home() {
                       userVote={post.userVote}
                     />
                     <div className="text-sm text-gray-400">
-                      💬 {post.commentCount} comment
-                      {post.commentCount !== 1 ? "s" : ""}
+                      💬 {post.commentCount} {post.commentCount !== 1 ? t("comments") : t("comment")}
                     </div>
                   </div>
 
