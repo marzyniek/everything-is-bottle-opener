@@ -335,6 +335,47 @@
 /* --- Responsive Typography --- */
 @media (max-width: 768px) {
   .header-title {
+    font-size: 2rem;
+  }
+  
+  .stat-card {
     font-size: 2.5rem;
+  }
+  
+  .stat-label {
+    font-size: 1rem;
+  }
+}
+
+/* --- Mobile-friendly touch targets --- */
+button,
+a[role="button"],
+.btn-primary,
+.btn-success,
+.btn-danger,
+.btn-secondary,
+.btn-purple {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* --- Mobile-specific improvements --- */
+@media (max-width: 640px) {
+  .page-container {
+    padding: 1rem;
+  }
+  
+  .header-section {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+  
+  .card {
+    border-radius: 0.5rem;
+  }
+  
+  .form-input {
+    min-height: 44px;
+    font-size: 16px; /* Prevents iOS zoom on focus */
   }
 }

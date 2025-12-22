@@ -86,33 +86,33 @@ export default async function ToolPage({
   const commentsByAttempt = groupCommentsByAttempt(allComments);
 
   return (
-    <main className="min-h-screen bg-gray-950 text-white p-6">
+    <main className="min-h-screen bg-gray-950 text-white p-4 sm:p-6">
       {/* HEADER */}
-      <header className="flex flex-col items-center justify-center py-8 border-b border-gray-800">
-        <h1 className="text-5xl font-extrabold mb-6 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
+      <header className="flex flex-col items-center justify-center py-6 md:py-8 border-b border-gray-800 px-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 sm:mb-6 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400 text-center break-words max-w-full">
           {toolName} 🍾
         </h1>
 
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
           <Link href="/attempts">
-            <button className="bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-2 rounded-full transition-all">
+            <button className="bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-3 rounded-full transition-all w-full sm:w-auto">
               ← {tNav("backToAllAttempts")}
             </button>
           </Link>
 
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-2 rounded-full transition-all">
+              <button className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3 rounded-full transition-all w-full sm:w-auto">
                 {tNav("signIn")}
               </button>
             </SignInButton>
           </SignedOut>
 
           <SignedIn>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
               <UserButton />
-              <Link href="/upload">
-                <button className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-2 rounded-full transition-all flex items-center gap-2">
+              <Link href="/upload" className="w-full sm:w-auto">
+                <button className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-full transition-all flex items-center justify-center gap-2 w-full">
                   📹 {tHome("uploadNewAttempt")}
                 </button>
               </Link>
@@ -122,19 +122,19 @@ export default async function ToolPage({
       </header>
 
       {/* ATTEMPTS */}
-      <section className="max-w-4xl mx-auto mt-12">
-        <h2 className="text-2xl font-bold mb-6 text-gray-300">
+      <section className="max-w-4xl mx-auto mt-8 sm:mt-12 px-4">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-300">
           {toolAttempts.length}{" "}
           {toolAttempts.length !== 1 ? t("attempts") : t("attempt")}{" "}
           {t("attemptsWith")} {toolName}
         </h2>
 
         {toolAttempts.length === 0 ? (
-          <div className="text-center text-gray-500 py-20">
-            <p className="text-xl">{t("noAttemptsFoundForTool")}</p>
+          <div className="text-center text-gray-500 py-12 sm:py-20">
+            <p className="text-lg sm:text-xl">{t("noAttemptsFoundForTool")}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {toolAttempts.map((post) => (
               <div
                 key={post.id}
