@@ -10,8 +10,6 @@ import { getTranslations } from "next-intl/server";
 export default async function AttemptsPage() {
   const t = await getTranslations("attempts");
   const tNav = await getTranslations("navigation");
-  const tHome = await getTranslations("home");
-  
   // Get all attempts
   const allAttempts = await db
     .select({
@@ -68,7 +66,7 @@ export default async function AttemptsPage() {
               <UserButton />
               <Link href="/upload">
                 <button className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-2 rounded-full transition-all flex items-center gap-2">
-                  📹 {tHome("uploadNewAttempt")}
+                  📹 {t("uploadNewAttempt")}
                 </button>
               </Link>
             </div>
@@ -81,17 +79,23 @@ export default async function AttemptsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl p-8 shadow-xl">
             <div className="text-5xl font-extrabold mb-2">{totalAttempts}</div>
-            <div className="text-xl text-blue-100">{t("totalBottlesOpened")}</div>
+            <div className="text-xl text-blue-100">
+              {t("totalBottlesOpened")}
+            </div>
           </div>
 
           <div className="bg-gradient-to-br from-green-600 to-green-800 rounded-xl p-8 shadow-xl">
             <div className="text-5xl font-extrabold mb-2">{uniqueTools}</div>
-            <div className="text-xl text-green-100">{t("differentToolsUsed")}</div>
+            <div className="text-xl text-green-100">
+              {t("differentToolsUsed")}
+            </div>
           </div>
         </div>
 
         {/* TOOLS LIST */}
-        <h2 className="text-3xl font-bold mb-6 text-gray-300">{t("browseByTool")}</h2>
+        <h2 className="text-3xl font-bold mb-6 text-gray-300">
+          {t("browseByTool")}
+        </h2>
 
         {Object.keys(toolGroups).length === 0 ? (
           <div className="text-center text-gray-500 py-20">
@@ -107,11 +111,10 @@ export default async function AttemptsPage() {
                   href={`/attempts/tool/${encodeURIComponent(tool)}`}
                   className="bg-gray-900 rounded-xl p-6 border border-gray-800 hover:border-gray-700 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
                 >
-                  <h3 className="text-2xl font-bold mb-2 text-white">
-                    {tool}
-                  </h3>
+                  <h3 className="text-2xl font-bold mb-2 text-white">{tool}</h3>
                   <p className="text-gray-400 text-lg">
-                    {toolAttempts.length} {toolAttempts.length !== 1 ? t("attempts") : t("attempt")}
+                    {toolAttempts.length}{" "}
+                    {toolAttempts.length !== 1 ? t("attempts") : t("attempt")}
                   </p>
 
                   {/* Show preview of first video */}

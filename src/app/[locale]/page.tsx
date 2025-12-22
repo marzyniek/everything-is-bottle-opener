@@ -31,7 +31,9 @@ export default async function Home() {
       username: users.username,
       voteCount: sql<number>`CAST(COALESCE(SUM(${votes.value}), 0) AS INTEGER)`,
       userVote: userId
-        ? sql<number | null>`MAX(CASE WHEN ${votes.userId} = ${userId} THEN ${votes.value} END)`
+        ? sql<
+            number | null
+          >`MAX(CASE WHEN ${votes.userId} = ${userId} THEN ${votes.value} END)`
         : sql<number | null>`NULL`,
       commentCount: sql<number>`CAST(COUNT(DISTINCT ${comments.id}) AS INTEGER)`,
     })
@@ -49,6 +51,7 @@ export default async function Home() {
         <h1 className="text-5xl font-extrabold mb-6 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
           {t("title")}
         </h1>
+        <h2 className="text-lg text-gray-400">{t("description")}</h2>
 
         <div className="flex gap-4">
           <Link href="/attempts">
@@ -141,7 +144,8 @@ export default async function Home() {
                       userVote={post.userVote}
                     />
                     <div className="text-sm text-gray-400">
-                      💬 {post.commentCount} {post.commentCount !== 1 ? t("comments") : t("comment")}
+                      💬 {post.commentCount}{" "}
+                      {post.commentCount !== 1 ? t("comments") : t("comment")}
                     </div>
                   </div>
 

@@ -1,0 +1,71 @@
+{
+  "metadata": {
+    "title": "Celý svět je otvírák",
+    "description": "Místo pro všechny nadšence do umění otevírání piva"
+  },
+  "common": {
+    "by": "od",
+    "anonymous": "Anonym",
+    "vs": "vs."
+  },
+  "navigation": {
+    "backToFeed": "Zpět na přehled",
+    "backToAllAttempts": "Zpět na všechny pokusy",
+    "signIn": "Přihlásit se",
+    "signInToPost": "Přihlásit se pro přidání"
+  },
+  "home": {
+    "title": "Celý svět je otvírák",
+    "description": "Místo pro všechny příznivce umění otevírání piva",
+    "viewAllAttempts": "📊 Zobrazit všechny pokusy",
+    "uploadNewAttempt": "📹 Nahrej nový pokus",
+    "latestAttempts": "Nejnovější pokusy",
+    "noAttemptsYet": "Zatím žádné pokusy. Buď první!",
+    "comment": "komentář",
+    "comments": "komentáře"
+  },
+  "attempts": {
+    "title": "Všechny pokusy 🍾",
+    "uploadNewAttempt": "Nahrát nový pokus",
+    "totalBottlesOpened": "Celkem otevřených lahví",
+    "differentToolsUsed": "Různé použité nástroje",
+    "browseByTool": "Procházet podle nástroje",
+    "noAttemptsYet": "Zatím žádné pokusy. Buď první!",
+    "attempt": "pokus",
+    "attempts": "pokusy",
+    "attemptsWith": "pomocí",
+    "noAttemptsFoundForTool": "Pro tento nástroj nebyly nalezeny žádné pokusy."
+  },
+  "upload": {
+    "title": "Nahraj svůj pokus 🍾",
+    "videoUploaded": "Video nahráno! Teď přidej detaily.",
+    "error": "Chyba: {message}",
+    "toolUsed": "Použitý nástroj",
+    "toolUsedPlaceholder": "např. zapalovač, lžíce",
+    "beverageBrand": "Značka nápoje",
+    "beverageBrandPlaceholder": "např. Corona, Cola",
+    "publish": "🚀 Zveřejnit"
+  },
+  "comments": {
+    "hide": "Skrýt",
+    "add": "Přidat",
+    "comment": "Komentovat",
+    "writeComment": "Napiš komentář...",
+    "errorEmpty": "Komentář nesmí být prázdný",
+    "errorTooLong": "Komentář musí mít maximálně {max} znaků",
+    "errorSignIn": "Pro přidání komentáře se prosím přihlas",
+    "errorNotFound": "Tento pokus již neexistuje",
+    "errorProfile": "Profil uživatele není kompletní. Kontaktuj prosím podporu.",
+    "errorGeneric": "Nepodařilo se přidat komentář. Zkus to prosím znovu."
+  },
+  "votes": {
+    "upvote": "Líbí se",
+    "downvote": "Nelíbí se",
+    "errorSignIn": "Pro hlasování se prosím přihlas",
+    "errorNotFound": "Tento pokus již neexistuje",
+    "errorGeneric": "Hlasování se nezdařilo. Zkus to prosím znovu."
+  },
+  "delete": {
+    "title": "Smazat příspěvek"
+  }
+}
