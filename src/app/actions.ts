@@ -53,7 +53,7 @@ export async function deleteAttempt(attemptId: string) {
 
   // Verify the user owns the attempt before deleting
   const attempt = await db
-    .select()
+    .select({ userId: attempts.userId })
     .from(attempts)
     .where(eq(attempts.id, attemptId));
 
