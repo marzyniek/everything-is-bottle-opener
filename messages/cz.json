@@ -49,7 +49,9 @@
   "comments": {
     "hide": "Skrýt",
     "add": "Přidat",
+    "view": "Zobrazit",
     "comment": "Komentovat",
+    "comments": "Komentáře",
     "writeComment": "Napiš komentář...",
     "errorEmpty": "Komentář nesmí být prázdný",
     "errorTooLong": "Komentář musí mít maximálně {max} znaků",

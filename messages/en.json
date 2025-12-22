@@ -47,7 +47,9 @@
   "comments": {
     "hide": "Hide",
     "add": "Add",
+    "view": "View",
     "comment": "Comment",
+    "comments": "Comments",
     "writeComment": "Write a comment...",
     "errorEmpty": "Comment cannot be empty",
     "errorTooLong": "Comment must be {max} characters or less",

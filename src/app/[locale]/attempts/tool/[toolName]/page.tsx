@@ -5,7 +5,7 @@ import { auth } from "@clerk/nextjs/server";
 import { Link } from "@/i18n/routing";
 import { db } from "@/db";
 import { attempts, users, comments, votes } from "@/db/schema";
-import { desc, eq, sql } from "drizzle-orm";
+import { desc, eq, sql, inArray } from "drizzle-orm";
 import { DeleteButton } from "../../../DeleteButton";
 import { VoteButtons } from "../../../VoteButtons";
 import { CommentSection } from "../../../CommentSection";
@@ -49,6 +49,30 @@ export default async function ToolPage({
     .where(eq(attempts.toolUsed, toolName))
     .groupBy(attempts.id, users.username)
     .orderBy(desc(attempts.createdAt));
+
+  // Fetch all comments for these attempts
+  const attemptIds = toolAttempts.map(a => a.id);
+  const allComments = attemptIds.length > 0 ? await db
+    .select({
+      id: comments.id,
+      content: comments.content,
+      createdAt: comments.createdAt,
+      attemptId: comments.attemptId,
+      username: users.username,
+    })
+    .from(comments)
+    .leftJoin(users, eq(comments.userId, users.id))
+    .where(inArray(comments.attemptId, attemptIds))
+    .orderBy(comments.createdAt) : [];
+
+  // Group comments by attemptId for easy lookup
+  const commentsByAttempt = allComments.reduce((acc, comment) => {
+    if (!acc[comment.attemptId]) {
+      acc[comment.attemptId] = [];
+    }
+    acc[comment.attemptId].push(comment);
+    return acc;
+  }, {} as Record<string, typeof allComments>);
 
   return (
     <main className="min-h-screen bg-gray-950 text-white p-6">
@@ -156,7 +180,10 @@ export default async function ToolPage({
                   </div>
 
                   {/* Comments */}
-                  <CommentSection attemptId={post.id} />
+                  <CommentSection 
+                    attemptId={post.id} 
+                    comments={commentsByAttempt[post.id] || []}
+                  />
                 </div>
               </div>
             ))}

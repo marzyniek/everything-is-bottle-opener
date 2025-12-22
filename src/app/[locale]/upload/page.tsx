@@ -2,13 +2,23 @@
 
 import { UploadDropzone } from "@uploadthing/react";
 import { OurFileRouter } from "../../api/uploadthing/core";
-import { useState } from "react";
-import { createAttempt } from "../actions";
+import { useState, useEffect } from "react";
+import { createAttempt, getExistingToolsAndBrands } from "../actions";
 import { useTranslations } from "next-intl";
 
 export default function UploadPage() {
   const [videoUrl, setVideoUrl] = useState<string>("");
+  const [tools, setTools] = useState<string[]>([]);
+  const [brands, setBrands] = useState<string[]>([]);
   const t = useTranslations("upload");
+
+  useEffect(() => {
+    // Fetch existing tools and brands when component mounts
+    getExistingToolsAndBrands().then(data => {
+      setTools(data.tools);
+      setBrands(data.brands);
+    });
+  }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-950 text-white">
@@ -50,8 +60,14 @@ export default function UploadPage() {
                 name="toolUsed"
                 placeholder={t("toolUsedPlaceholder")}
                 required
+                list="tools-list"
                 className="w-full p-2 rounded bg-gray-800 border border-gray-700 text-white"
               />
+              <datalist id="tools-list">
+                {tools.map(tool => (
+                  <option key={tool} value={tool} />
+                ))}
+              </datalist>
             </div>
 
             <div>
@@ -62,8 +78,14 @@ export default function UploadPage() {
                 name="beverageBrand"
                 placeholder={t("beverageBrandPlaceholder")}
                 required
+                list="brands-list"
                 className="w-full p-2 rounded bg-gray-800 border border-gray-700 text-white"
               />
+              <datalist id="brands-list">
+                {brands.map(brand => (
+                  <option key={brand} value={brand} />
+                ))}
+              </datalist>
             </div>
 
             <button

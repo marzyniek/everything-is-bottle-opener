@@ -157,3 +157,18 @@ export async function addVote(attemptId: string, value: number) {
   revalidatePath("/attempts");
   revalidatePath(`/attempts/tool/${encodeURIComponent(attempt[0].toolUsed)}`);
 }
+
+export async function getExistingToolsAndBrands() {
+  // Fetch all unique tools and beverage brands
+  const allAttempts = await db
+    .select({
+      toolUsed: attempts.toolUsed,
+      beverageBrand: attempts.beverageBrand,
+    })
+    .from(attempts);
+
+  const tools = Array.from(new Set(allAttempts.map(a => a.toolUsed))).sort();
+  const brands = Array.from(new Set(allAttempts.map(a => a.beverageBrand))).sort();
+
+  return { tools, brands };
+}

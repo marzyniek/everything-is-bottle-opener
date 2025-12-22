@@ -44,6 +44,28 @@ export default async function Home() {
     .groupBy(attempts.id, users.username)
     .orderBy(desc(attempts.createdAt)); // Newest first
 
+  // Fetch all comments for all attempts to pass to CommentSection
+  const allComments = await db
+    .select({
+      id: comments.id,
+      content: comments.content,
+      createdAt: comments.createdAt,
+      attemptId: comments.attemptId,
+      username: users.username,
+    })
+    .from(comments)
+    .leftJoin(users, eq(comments.userId, users.id))
+    .orderBy(comments.createdAt);
+
+  // Group comments by attemptId for easy lookup
+  const commentsByAttempt = allComments.reduce((acc, comment) => {
+    if (!acc[comment.attemptId]) {
+      acc[comment.attemptId] = [];
+    }
+    acc[comment.attemptId].push(comment);
+    return acc;
+  }, {} as Record<string, typeof allComments>);
+
   return (
     <main className="min-h-screen bg-gray-950 text-white p-6">
       {/* --- HEADER SECTION --- */}
@@ -150,7 +172,10 @@ export default async function Home() {
                   </div>
 
                   {/* Comments */}
-                  <CommentSection attemptId={post.id} />
+                  <CommentSection 
+                    attemptId={post.id} 
+                    comments={commentsByAttempt[post.id] || []}
+                  />
                 </div>
               </div>
             ))}
