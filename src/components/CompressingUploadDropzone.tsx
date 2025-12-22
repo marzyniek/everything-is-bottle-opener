@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { compressVideo, shouldCompressVideo } from "@/lib/videoCompression";
+import { isMobileDevice } from "@/lib/utils";
 import { UploadDropzone } from "@uploadthing/react";
 import type { OurFileRouter } from "@/app/api/uploadthing/core";
 
@@ -25,6 +26,10 @@ export function CompressingUploadDropzone({
   const [compressionProgress, setCompressionProgress] = useState(0);
   const [compressedFile, setCompressedFile] = useState<File | null>(null);
   const [showUploader, setShowUploader] = useState(false);
+  const [wasCompressed, setWasCompressed] = useState(false);
+  
+  // Memoize mobile detection since device type doesn't change during session
+  const isMobile = useMemo(() => isMobileDevice(), []);
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -34,9 +39,10 @@ export function CompressingUploadDropzone({
 
     try {
       let fileToUpload = file;
+      let compressed = false;
 
-      // Check if compression is needed
-      if (shouldCompressVideo(file, 10)) {
+      // Skip compression on mobile devices or if file is already small
+      if (!isMobile && shouldCompressVideo(file, 10)) {
         setIsCompressing(true);
         setCompressionProgress(0);
 
@@ -45,9 +51,11 @@ export function CompressingUploadDropzone({
         });
 
         setIsCompressing(false);
+        compressed = true;
       }
 
       setCompressedFile(fileToUpload);
+      setWasCompressed(compressed);
       setShowUploader(true);
     } catch (error) {
       setIsCompressing(false);
@@ -75,11 +83,13 @@ export function CompressingUploadDropzone({
   if (showUploader && compressedFile) {
     return (
       <div className="space-y-4">
-        <div className="border-2 border-solid border-green-700 rounded-xl p-4 bg-green-900/20 text-center">
-          <p className="text-sm font-semibold text-green-400">
-            ✓ Video compressed successfully
-          </p>
-        </div>
+        {wasCompressed && (
+          <div className="border-2 border-solid border-green-700 rounded-xl p-4 bg-green-900/20 text-center">
+            <p className="text-sm font-semibold text-green-400">
+              ✓ Video compressed successfully
+            </p>
+          </div>
+        )}
         <div className="border-2 border-dashed border-gray-700 rounded-xl p-6 sm:p-10 bg-gray-900/50">
           <UploadDropzone<OurFileRouter, "videoUploader">
             endpoint="videoUploader"
@@ -108,9 +118,11 @@ export function CompressingUploadDropzone({
             <p className="text-sm text-gray-400">
               MP4, MOV, AVI, MKV, WEBM (max 64MB)
             </p>
-            <p className="text-xs text-gray-500">
-              Videos over 10MB will be automatically compressed
-            </p>
+            {!isMobile && (
+              <p className="text-xs text-gray-500">
+                Videos over 10MB will be automatically compressed
+              </p>
+            )}
           </div>
         </label>
         <input
