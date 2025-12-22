@@ -91,6 +91,16 @@ export async function addComment(attemptId: string, content: string) {
     });
   }
 
+  // Get the attempt to find the tool name for revalidation
+  const attempt = await db
+    .select({ toolUsed: attempts.toolUsed })
+    .from(attempts)
+    .where(eq(attempts.id, attemptId));
+
+  if (attempt.length === 0) {
+    throw new Error("Attempt not found");
+  }
+
   await db.insert(comments).values({
     userId: user.id,
     attemptId: attemptId,
@@ -99,7 +109,7 @@ export async function addComment(attemptId: string, content: string) {
 
   revalidatePath("/");
   revalidatePath("/attempts");
-  revalidatePath(`/attempts/${attemptId}`);
+  revalidatePath(`/attempts/tool/${encodeURIComponent(attempt[0].toolUsed)}`);
 }
 
 export async function addVote(attemptId: string, value: number) {
@@ -119,6 +129,16 @@ export async function addVote(attemptId: string, value: number) {
       email: user.emailAddresses[0].emailAddress,
       username: user.firstName || "Anonymous",
     });
+  }
+
+  // Get the attempt to find the tool name for revalidation
+  const attempt = await db
+    .select({ toolUsed: attempts.toolUsed })
+    .from(attempts)
+    .where(eq(attempts.id, attemptId));
+
+  if (attempt.length === 0) {
+    throw new Error("Attempt not found");
   }
 
   // Check if user already voted on this attempt
@@ -152,5 +172,5 @@ export async function addVote(attemptId: string, value: number) {
 
   revalidatePath("/");
   revalidatePath("/attempts");
-  revalidatePath(`/attempts/${attemptId}`);
+  revalidatePath(`/attempts/tool/${encodeURIComponent(attempt[0].toolUsed)}`);
 }

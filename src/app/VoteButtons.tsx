@@ -2,7 +2,7 @@
 
 import { addVote } from "./actions";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
 
 export function VoteButtons({
   attemptId,
@@ -14,52 +14,69 @@ export function VoteButtons({
   userVote: number | null;
 }) {
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState("");
 
   const handleVote = (value: number) => {
+    setError("");
     startTransition(async () => {
-      await addVote(attemptId, value);
+      try {
+        await addVote(attemptId, value);
+      } catch (err) {
+        if (err instanceof Error && err.message === "You must be logged in") {
+          setError("Please sign in to vote");
+        } else {
+          setError("Failed to vote. Please try again.");
+        }
+        // Clear error after 3 seconds
+        setTimeout(() => setError(""), 3000);
+      }
     });
   };
 
   return (
-    <div className="flex items-center gap-3">
-      <button
-        onClick={() => handleVote(1)}
-        disabled={isPending}
-        className={`flex items-center gap-1 px-3 py-1 rounded-full transition-all ${
-          userVote === 1
-            ? "bg-green-600 text-white"
-            : "bg-gray-800 text-gray-400 hover:bg-gray-700"
-        } disabled:opacity-50 disabled:cursor-not-allowed`}
-        title="Upvote"
-      >
-        <ThumbsUp size={16} />
-      </button>
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => handleVote(1)}
+          disabled={isPending}
+          className={`flex items-center gap-1 px-3 py-1 rounded-full transition-all ${
+            userVote === 1
+              ? "bg-green-600 text-white"
+              : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+          } disabled:opacity-50 disabled:cursor-not-allowed`}
+          title="Upvote"
+        >
+          <ThumbsUp size={16} />
+        </button>
 
-      <span
-        className={`font-bold text-lg ${
-          voteCount > 0
-            ? "text-green-400"
-            : voteCount < 0
-            ? "text-red-400"
-            : "text-gray-400"
-        }`}
-      >
-        {voteCount}
-      </span>
+        <span
+          className={`font-bold text-lg ${
+            voteCount > 0
+              ? "text-green-400"
+              : voteCount < 0
+              ? "text-red-400"
+              : "text-gray-400"
+          }`}
+        >
+          {voteCount}
+        </span>
 
-      <button
-        onClick={() => handleVote(-1)}
-        disabled={isPending}
-        className={`flex items-center gap-1 px-3 py-1 rounded-full transition-all ${
-          userVote === -1
-            ? "bg-red-600 text-white"
-            : "bg-gray-800 text-gray-400 hover:bg-gray-700"
-        } disabled:opacity-50 disabled:cursor-not-allowed`}
-        title="Downvote"
-      >
-        <ThumbsDown size={16} />
-      </button>
+        <button
+          onClick={() => handleVote(-1)}
+          disabled={isPending}
+          className={`flex items-center gap-1 px-3 py-1 rounded-full transition-all ${
+            userVote === -1
+              ? "bg-red-600 text-white"
+              : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+          } disabled:opacity-50 disabled:cursor-not-allowed`}
+          title="Downvote"
+        >
+          <ThumbsDown size={16} />
+        </button>
+      </div>
+      {error && (
+        <p className="text-red-400 text-xs">{error}</p>
+      )}
     </div>
   );
 }
