@@ -3,6 +3,7 @@
 import { addVote } from "./actions";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { useTransition, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export function VoteButtons({
   attemptId,
@@ -15,6 +16,7 @@ export function VoteButtons({
 }) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
+  const t = useTranslations("votes");
 
   const handleVote = (value: number) => {
     setError("");
@@ -25,14 +27,14 @@ export function VoteButtons({
         // Handle specific error cases
         if (err instanceof Error) {
           if (err.message.includes("logged in")) {
-            setError("Please sign in to vote");
+            setError(t("errorSignIn"));
           } else if (err.message.includes("not found")) {
-            setError("This attempt no longer exists");
+            setError(t("errorNotFound"));
           } else {
-            setError("Failed to vote. Please try again.");
+            setError(t("errorGeneric"));
           }
         } else {
-          setError("Failed to vote. Please try again.");
+          setError(t("errorGeneric"));
         }
         // Clear error after 3 seconds
         setTimeout(() => setError(""), 3000);
@@ -51,7 +53,7 @@ export function VoteButtons({
               ? "bg-green-600 text-white"
               : "bg-gray-800 text-gray-400 hover:bg-gray-700"
           } disabled:opacity-50 disabled:cursor-not-allowed`}
-          title="Upvote"
+          title={t("upvote")}
         >
           <ThumbsUp size={16} />
         </button>
@@ -76,7 +78,7 @@ export function VoteButtons({
               ? "bg-red-600 text-white"
               : "bg-gray-800 text-gray-400 hover:bg-gray-700"
           } disabled:opacity-50 disabled:cursor-not-allowed`}
-          title="Downvote"
+          title={t("downvote")}
         >
           <ThumbsDown size={16} />
         </button>

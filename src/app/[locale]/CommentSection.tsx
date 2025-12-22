@@ -3,6 +3,7 @@
 import { addComment } from "./actions";
 import { useState, useTransition } from "react";
 import { MessageSquare, Send } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const MIN_COMMENT_LENGTH = 1;
 const MAX_COMMENT_LENGTH = 500;
@@ -12,6 +13,7 @@ export function CommentSection({ attemptId }: { attemptId: string }) {
   const [comment, setComment] = useState("");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
+  const t = useTranslations("comments");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,12 +22,12 @@ export function CommentSection({ attemptId }: { attemptId: string }) {
     const trimmedComment = comment.trim();
     
     if (trimmedComment.length < MIN_COMMENT_LENGTH) {
-      setError("Comment cannot be empty");
+      setError(t("errorEmpty"));
       return;
     }
 
     if (trimmedComment.length > MAX_COMMENT_LENGTH) {
-      setError(`Comment must be ${MAX_COMMENT_LENGTH} characters or less`);
+      setError(t("errorTooLong", { max: MAX_COMMENT_LENGTH }));
       return;
     }
 
@@ -38,16 +40,16 @@ export function CommentSection({ attemptId }: { attemptId: string }) {
         // Handle specific error cases
         if (err instanceof Error) {
           if (err.message.includes("logged in")) {
-            setError("Please sign in to comment");
+            setError(t("errorSignIn"));
           } else if (err.message.includes("not found")) {
-            setError("This attempt no longer exists");
+            setError(t("errorNotFound"));
           } else if (err.message.includes("email")) {
-            setError("User profile incomplete. Please contact support.");
+            setError(t("errorProfile"));
           } else {
-            setError("Failed to add comment. Please try again.");
+            setError(t("errorGeneric"));
           }
         } else {
-          setError("Failed to add comment. Please try again.");
+          setError(t("errorGeneric"));
         }
       }
     });
@@ -60,7 +62,7 @@ export function CommentSection({ attemptId }: { attemptId: string }) {
         className="text-blue-400 hover:text-blue-300 transition-colors text-sm flex items-center gap-2"
       >
         <MessageSquare size={16} />
-        {showComments ? "Hide" : "Add"} Comment
+        {showComments ? t("hide") : t("add")} {t("comment")}
       </button>
 
       {showComments && (
@@ -70,7 +72,7 @@ export function CommentSection({ attemptId }: { attemptId: string }) {
               type="text"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="Write a comment..."
+              placeholder={t("writeComment")}
               maxLength={MAX_COMMENT_LENGTH}
               className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
               disabled={isPending}

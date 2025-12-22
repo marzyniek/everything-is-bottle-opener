@@ -1,16 +1,18 @@
 "use client";
 
 import { UploadDropzone } from "@uploadthing/react";
-import { OurFileRouter } from "../api/uploadthing/core";
+import { OurFileRouter } from "../../api/uploadthing/core";
 import { useState } from "react";
 import { createAttempt } from "../actions";
+import { useTranslations } from "next-intl";
 
 export default function UploadPage() {
   const [videoUrl, setVideoUrl] = useState<string>("");
+  const t = useTranslations("upload");
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-950 text-white">
-      <h1 className="text-3xl font-bold mb-8">Upload Your Attempt 🍾</h1>
+      <h1 className="text-3xl font-bold mb-8">{t("title")}</h1>
 
       {/* PHASE 1: The Video Upload */}
       {!videoUrl ? (
@@ -20,10 +22,10 @@ export default function UploadPage() {
             onClientUploadComplete={(res) => {
               // Capture the URL given by UploadThing
               setVideoUrl(res[0].url);
-              alert("Video uploaded! Now add details.");
+              alert(t("videoUploaded"));
             }}
             onUploadError={(error: Error) => {
-              alert(`Error: ${error.message}`);
+              alert(t("error", { message: error.message }));
             }}
           />
         </div>
@@ -42,11 +44,11 @@ export default function UploadPage() {
 
             <div>
               <label className="block text-sm font-medium mb-1 text-gray-400">
-                Tool Used
+                {t("toolUsed")}
               </label>
               <input
                 name="toolUsed"
-                placeholder="e.g. Lighter, Spoon"
+                placeholder={t("toolUsedPlaceholder")}
                 required
                 className="w-full p-2 rounded bg-gray-800 border border-gray-700 text-white"
               />
@@ -54,11 +56,11 @@ export default function UploadPage() {
 
             <div>
               <label className="block text-sm font-medium mb-1 text-gray-400">
-                Beverage Brand
+                {t("beverageBrand")}
               </label>
               <input
                 name="beverageBrand"
-                placeholder="e.g. Corona, Coke"
+                placeholder={t("beverageBrandPlaceholder")}
                 required
                 className="w-full p-2 rounded bg-gray-800 border border-gray-700 text-white"
               />
@@ -68,7 +70,7 @@ export default function UploadPage() {
               type="submit"
               className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg"
             >
-              🚀 Publish
+              {t("publish")}
             </button>
           </form>
         </div>
