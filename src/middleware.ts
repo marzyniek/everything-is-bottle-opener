@@ -9,6 +9,12 @@ const isProtectedRoute = createRouteMatcher([`${localePattern}/upload(.*)`]);
 const intlMiddleware = createMiddleware(routing);
 
 export default clerkMiddleware(async (auth, req) => {
+  // Skip intl middleware for UploadThing API routes
+  if (req.nextUrl.pathname.startsWith('/api/uploadthing')) {
+    if (isProtectedRoute(req)) await auth.protect();
+    return;
+  }
+  
   // Run the intl middleware first
   const intlResponse = intlMiddleware(req);
   
