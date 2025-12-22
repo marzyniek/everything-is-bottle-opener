@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { compressVideo, shouldCompressVideo } from "@/lib/videoCompression";
 import { isMobileDevice } from "@/lib/utils";
 import { UploadDropzone } from "@uploadthing/react";
@@ -27,6 +27,9 @@ export function CompressingUploadDropzone({
   const [compressedFile, setCompressedFile] = useState<File | null>(null);
   const [showUploader, setShowUploader] = useState(false);
   const [wasCompressed, setWasCompressed] = useState(false);
+  
+  // Memoize mobile detection since device type doesn't change during session
+  const isMobile = useMemo(() => isMobileDevice(), []);
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -39,7 +42,6 @@ export function CompressingUploadDropzone({
       let compressed = false;
 
       // Skip compression on mobile devices or if file is already small
-      const isMobile = isMobileDevice();
       if (!isMobile && shouldCompressVideo(file, 10)) {
         setIsCompressing(true);
         setCompressionProgress(0);
@@ -116,7 +118,7 @@ export function CompressingUploadDropzone({
             <p className="text-sm text-gray-400">
               MP4, MOV, AVI, MKV, WEBM (max 64MB)
             </p>
-            {!isMobileDevice() && (
+            {!isMobile && (
               <p className="text-xs text-gray-500">
                 Videos over 10MB will be automatically compressed
               </p>

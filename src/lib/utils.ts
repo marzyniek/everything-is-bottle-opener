@@ -23,8 +23,10 @@ export function isMobileDevice(): boolean {
     return false;
   }
   
-  const userAgent = navigator.userAgent || navigator.vendor || (window as unknown as { opera: string }).opera;
+  const windowWithOpera = window as typeof window & { opera?: string };
+  const userAgent = navigator.userAgent || navigator.vendor || windowWithOpera.opera || "";
   
   // Check for mobile device patterns in user agent
+  // Note: This is a simple check that covers most common mobile devices
   return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
 }
