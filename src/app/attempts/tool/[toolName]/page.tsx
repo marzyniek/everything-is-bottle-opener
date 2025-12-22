@@ -16,7 +16,8 @@ export default async function ToolPage({
   params: { toolName: string };
 }) {
   const { userId } = await auth();
-  const toolName = decodeURIComponent(params.toolName);
+  const awaitedParams = await params;
+  const toolName = decodeURIComponent(awaitedParams.toolName);
 
   // Fetch all attempts for this tool with vote counts and user votes
   const toolAttempts = await db
@@ -30,7 +31,9 @@ export default async function ToolPage({
       username: users.username,
       voteCount: sql<number>`CAST(COALESCE(SUM(${votes.value}), 0) AS INTEGER)`,
       userVote: userId
-        ? sql<number | null>`MAX(CASE WHEN ${votes.userId} = ${userId} THEN ${votes.value} END)`
+        ? sql<
+            number | null
+          >`MAX(CASE WHEN ${votes.userId} = ${userId} THEN ${votes.value} END)`
         : sql<number | null>`NULL`,
       commentCount: sql<number>`CAST(COUNT(DISTINCT ${comments.id}) AS INTEGER)`,
     })
