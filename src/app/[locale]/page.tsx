@@ -9,7 +9,6 @@ import { desc, eq, sql } from "drizzle-orm";
 import { DeleteButton } from "./DeleteButton";
 import { VoteButtons } from "./VoteButtons";
 import { CommentSection } from "./CommentSection";
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 
 // Mark function as 'async' so we can fetch data
