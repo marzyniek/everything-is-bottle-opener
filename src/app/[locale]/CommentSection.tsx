@@ -73,9 +73,9 @@ export function CommentSection({
     <div className="mt-4">
       <button
         onClick={() => setShowComments(!showComments)}
-        className="text-blue-400 hover:text-blue-300 transition-colors text-sm flex items-center gap-2"
+        className="text-blue-400 hover:text-blue-300 transition-colors text-sm flex items-center gap-2 min-h-[44px] py-2"
       >
-        <MessageSquare size={16} />
+        <MessageSquare size={18} />
         {showComments ? t("hide") : t("view")} {t("comments")}
       </button>
 
@@ -109,21 +109,21 @@ export function CommentSection({
                 onChange={(e) => setComment(e.target.value)}
                 placeholder={t("writeComment")}
                 maxLength={MAX_COMMENT_LENGTH}
-                className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                className="flex-1 px-3 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500 min-h-[44px]"
                 disabled={isPending}
               />
               <button
                 type="submit"
                 disabled={isPending || !comment.trim()}
-                className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-3 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-h-[44px]"
               >
-                <Send size={16} />
+                <Send size={18} />
               </button>
             </div>
             {error && (
-              <p className="text-red-400 text-xs mt-1">{error}</p>
+              <p className="text-red-400 text-xs sm:text-sm mt-1">{error}</p>
             )}
-            <p className="text-gray-500 text-xs mt-1">
+            <p className="text-gray-500 text-xs sm:text-sm mt-1">
               {comment.length}/{MAX_COMMENT_LENGTH}
             </p>
           </form>

@@ -26,12 +26,12 @@ export default function UploadPage() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-950 text-white">
-      <h1 className="text-3xl font-bold mb-8">{t("title")}</h1>
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 bg-gray-950 text-white">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">{t("title")}</h1>
 
       {/* PHASE 1: The Video Upload */}
       {!videoUrl ? (
-        <div className="border-2 border-dashed border-gray-700 rounded-xl p-10 bg-gray-900/50">
+        <div className="border-2 border-dashed border-gray-700 rounded-xl p-6 sm:p-10 bg-gray-900/50 w-full max-w-xl">
           <UploadDropzone<OurFileRouter, "videoUploader">
             endpoint="videoUploader"
             onClientUploadComplete={(res) => {
@@ -46,11 +46,11 @@ export default function UploadPage() {
         </div>
       ) : (
         /* PHASE 2: The Details Form */
-        <div className="w-full max-w-md bg-gray-900 p-6 rounded-xl border border-gray-800">
+        <div className="w-full max-w-md bg-gray-900 p-4 sm:p-6 rounded-xl border border-gray-800">
           <video
             src={videoUrl}
             controls
-            className="w-full rounded-lg mb-6 bg-black"
+            className="w-full rounded-lg mb-4 sm:mb-6 bg-black"
           />
 
           <form action={createAttempt} className="flex flex-col gap-4">
@@ -66,7 +66,7 @@ export default function UploadPage() {
                 placeholder={t("toolUsedPlaceholder")}
                 required
                 list="tools-list"
-                className="w-full p-2 rounded bg-gray-800 border border-gray-700 text-white"
+                className="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white text-base min-h-[44px]"
               />
               <datalist id="tools-list">
                 {tools.map(tool => (
@@ -84,7 +84,7 @@ export default function UploadPage() {
                 placeholder={t("beverageBrandPlaceholder")}
                 required
                 list="brands-list"
-                className="w-full p-2 rounded bg-gray-800 border border-gray-700 text-white"
+                className="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white text-base min-h-[44px]"
               />
               <datalist id="brands-list">
                 {brands.map(brand => (
@@ -95,7 +95,7 @@ export default function UploadPage() {
 
             <button
               type="submit"
-              className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg"
+              className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg text-base"
             >
               {t("publish")}
             </button>

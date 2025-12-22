@@ -79,39 +79,39 @@ export default async function Home() {
   const commentsByAttempt = groupCommentsByAttempt(allComments);
 
   return (
-    <main className="min-h-screen bg-gray-950 text-white p-6">
+    <main className="min-h-screen bg-gray-950 text-white p-4 sm:p-6">
       {/* --- HEADER SECTION --- */}
-      <header className="flex flex-col items-center justify-center py-12 border-b border-gray-800">
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <span style={{ whiteSpace: "nowrap" }}>{t("subtitle1")}</span>
-          <h1 className="text-5xl font-extrabold mb-3 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
+      <header className="flex flex-col items-center justify-center py-6 md:py-12 border-b border-gray-800">
+        <div className="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left px-4">
+          <span className="text-sm sm:text-base whitespace-nowrap">{t("subtitle1")}</span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
             {t("title")}
           </h1>
-          <span style={{ whiteSpace: "nowrap" }}>{t("subtitle2")}</span>
+          <span className="text-sm sm:text-base whitespace-nowrap">{t("subtitle2")}</span>
         </div>
         <div className="flex flex-col items-center justify-center mb-4">
-          <h2 className="text-lg text-gray-400 mt-4">{t("description")}</h2>
+          <h2 className="text-base sm:text-lg text-gray-400 mt-4 text-center px-4">{t("description")}</h2>
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full px-4 sm:w-auto">
           <Link href="/attempts">
-            <button className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-2 rounded-full transition-all">
+            <button className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-3 rounded-full transition-all w-full sm:w-auto">
               {t("viewAllAttempts")}
             </button>
           </Link>
 
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-transparent border border-blue-500 text-white font-bold px-6 py-2 rounded-full transition-all">
+              <button className="bg-transparent border border-blue-500 text-white font-bold px-6 py-3 rounded-full transition-all w-full sm:w-auto">
                 {tNav("signInToPost")}
               </button>
             </SignInButton>
           </SignedOut>
 
           <SignedIn>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
               <UserButton />
-              <Link href="/upload">
-                <button className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-2 rounded-full transition-all flex items-center gap-2">
+              <Link href="/upload" className="w-full sm:w-auto">
+                <button className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-full transition-all flex items-center justify-center gap-2 w-full">
                   {t("uploadNewAttempt")}
                 </button>
               </Link>
@@ -121,17 +121,17 @@ export default async function Home() {
       </header>
 
       {/* --- FEED SECTION --- */}
-      <section className="max-w-4xl mx-auto mt-12">
-        <h2 className="text-2xl font-bold mb-6 text-gray-300">
+      <section className="max-w-4xl mx-auto mt-8 md:mt-12 px-4">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-300">
           {t("latestAttempts")}
         </h2>
 
         {allAttempts.length === 0 ? (
-          <div className="text-center text-gray-500 py-20">
-            <p className="text-xl">{t("noAttemptsYet")}</p>
+          <div className="text-center text-gray-500 py-12 sm:py-20">
+            <p className="text-lg sm:text-xl">{t("noAttemptsYet")}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {allAttempts.map((post) => (
               <div
                 key={post.id}
