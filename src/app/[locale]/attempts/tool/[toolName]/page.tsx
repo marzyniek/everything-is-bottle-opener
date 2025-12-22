@@ -25,7 +25,22 @@ export default async function ToolPage({
   const tCommon = await getTranslations("common");
   const tHome = await getTranslations("home");
 
-  // Fetch all attempts for this tool with vote counts and user votes
+  // 1. Create a subquery to calculate vote totals safely
+  const voteSq = db
+    .select({
+      attemptId: votes.attemptId,
+      voteCount: sql<number>`sum(${votes.value})`.as("voteCount"),
+      userVote: userId
+        ? sql<number>`sum(case when ${votes.userId} = ${userId} then ${votes.value} else 0 end)`.as(
+            "userVote"
+          )
+        : sql<number>`0`.as("userVote"),
+    })
+    .from(votes)
+    .groupBy(votes.attemptId)
+    .as("voteSq");
+
+  // 2. Fetch all attempts for this tool, joining the pre-calculated vote subquery
   const toolAttempts = await db
     .select({
       id: attempts.id,
@@ -35,36 +50,37 @@ export default async function ToolPage({
       createdAt: attempts.createdAt,
       userId: attempts.userId,
       username: users.username,
-      voteCount: sql<number>`CAST(COALESCE(SUM(${votes.value}), 0) AS INTEGER)`,
-      userVote: userId
-        ? sql<
-            number | null
-          >`MAX(CASE WHEN ${votes.userId} = ${userId} THEN ${votes.value} END)`
-        : sql<number | null>`NULL`,
+      // Pull data from the subquery
+      voteCount: sql<number>`CAST(COALESCE(${voteSq.voteCount}, 0) AS INTEGER)`,
+      userVote: sql<number>`CAST(COALESCE(${voteSq.userVote}, 0) AS INTEGER)`,
       commentCount: sql<number>`CAST(COUNT(DISTINCT ${comments.id}) AS INTEGER)`,
     })
     .from(attempts)
     .leftJoin(users, eq(attempts.userId, users.id))
-    .leftJoin(votes, eq(attempts.id, votes.attemptId))
+    // Join our subquery instead of the raw votes table
+    .leftJoin(voteSq, eq(attempts.id, voteSq.attemptId))
     .leftJoin(comments, eq(attempts.id, comments.attemptId))
     .where(eq(attempts.toolUsed, toolName))
-    .groupBy(attempts.id, users.username)
+    .groupBy(attempts.id, users.username, voteSq.voteCount, voteSq.userVote)
     .orderBy(desc(attempts.createdAt));
 
   // Fetch all comments for these attempts
-  const attemptIds = toolAttempts.map(a => a.id);
-  const allComments = attemptIds.length > 0 ? await db
-    .select({
-      id: comments.id,
-      content: comments.content,
-      createdAt: comments.createdAt,
-      attemptId: comments.attemptId,
-      username: users.username,
-    })
-    .from(comments)
-    .leftJoin(users, eq(comments.userId, users.id))
-    .where(inArray(comments.attemptId, attemptIds))
-    .orderBy(comments.createdAt) : [];
+  const attemptIds = toolAttempts.map((a) => a.id);
+  const allComments =
+    attemptIds.length > 0
+      ? await db
+          .select({
+            id: comments.id,
+            content: comments.content,
+            createdAt: comments.createdAt,
+            attemptId: comments.attemptId,
+            username: users.username,
+          })
+          .from(comments)
+          .leftJoin(users, eq(comments.userId, users.id))
+          .where(inArray(comments.attemptId, attemptIds))
+          .orderBy(comments.createdAt)
+      : [];
 
   // Group comments by attemptId for easy lookup
   const commentsByAttempt = groupCommentsByAttempt(allComments);
@@ -108,7 +124,8 @@ export default async function ToolPage({
       {/* ATTEMPTS */}
       <section className="max-w-4xl mx-auto mt-12">
         <h2 className="text-2xl font-bold mb-6 text-gray-300">
-          {toolAttempts.length} {toolAttempts.length !== 1 ? t("attempts") : t("attempt")}{" "}
+          {toolAttempts.length}{" "}
+          {toolAttempts.length !== 1 ? t("attempts") : t("attempt")}{" "}
           {t("attemptsWith")} {toolName}
         </h2>
 
@@ -170,13 +187,16 @@ export default async function ToolPage({
                       userVote={post.userVote}
                     />
                     <div className="text-sm text-gray-400">
-                      💬 {post.commentCount} {post.commentCount !== 1 ? tHome("comments") : tHome("comment")}
+                      💬 {post.commentCount}{" "}
+                      {post.commentCount !== 1
+                        ? tHome("comments")
+                        : tHome("comment")}
                     </div>
                   </div>
 
                   {/* Comments */}
-                  <CommentSection 
-                    attemptId={post.id} 
+                  <CommentSection
+                    attemptId={post.id}
                     comments={commentsByAttempt[post.id] || []}
                   />
                 </div>

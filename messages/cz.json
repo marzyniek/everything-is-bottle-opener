@@ -10,34 +10,36 @@
   },
   "navigation": {
     "backToFeed": "Zpět na přehled",
-    "backToAllAttempts": "Zpět na všechny pokusy",
+    "backToAllAttempts": "Zpět na všechny příspěvky",
     "signIn": "Přihlásit se",
     "signInToPost": "Přihlásit se pro přidání"
   },
   "home": {
     "title": "Celý svět je otvírák",
-    "description": "Místo pro všechny příznivce umění otevírání piva",
-    "viewAllAttempts": "📊 Zobrazit všechny pokusy",
-    "uploadNewAttempt": "📹 Nahrej nový pokus",
-    "latestAttempts": "Nejnovější pokusy",
-    "noAttemptsYet": "Zatím žádné pokusy. Buď první!",
+    "description": "Objevuj svět otevírání piva a zdokonaluj toto umění s námi!",
+    "subtitle1": "Moudrý člověk jednou řekl:",
+    "subtitle2": "a byla to pravda.",
+    "viewAllAttempts": "Doposud použité nástroje 🍻",
+    "uploadNewAttempt": "Nahrát nový příspěvek 🍺",
+    "latestAttempts": "Nejnovější příspěvky",
+    "noAttemptsYet": "Zatím žádné příspěvky. Buď první!",
     "comment": "komentář",
     "comments": "komentáře"
   },
   "attempts": {
-    "title": "Všechny pokusy 🍾",
-    "uploadNewAttempt": "Nahrát nový pokus",
+    "title": "Všechny příspěvky 🍾",
+    "uploadNewAttempt": "Nahrát nový příspěvek 🍺",
     "totalBottlesOpened": "Celkem otevřených lahví",
     "differentToolsUsed": "Různé použité nástroje",
-    "browseByTool": "Procházet podle nástroje",
-    "noAttemptsYet": "Zatím žádné pokusy. Buď první!",
+    "browseByTool": "Procházej použité nástroje",
+    "noAttemptsYet": "Zatím žádné příspěvky. Buď první!",
     "attempt": "pokus",
     "attempts": "pokusy",
     "attemptsWith": "pomocí",
-    "noAttemptsFoundForTool": "Pro tento nástroj nebyly nalezeny žádné pokusy."
+    "noAttemptsFoundForTool": "Pro tento nástroj nebyly nalezeny žádné příspěvky."
   },
   "upload": {
-    "title": "Nahraj svůj pokus 🍾",
+    "title": "Poděl se o svůj úspěch 🍾",
     "videoUploaded": "Video nahráno! Teď přidej detaily.",
     "error": "Chyba: {message}",
     "toolUsed": "Použitý nástroj",

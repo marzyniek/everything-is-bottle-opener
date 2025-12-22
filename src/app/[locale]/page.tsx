@@ -21,6 +21,23 @@ export default async function Home() {
   const tNav = await getTranslations("navigation");
 
   // Fetch all attempts + the username of the person who uploaded it + vote counts
+  const voteSq = db
+    .select({
+      attemptId: votes.attemptId,
+      // Sum of all votes for the attempt
+      voteCount: sql<number>`sum(${votes.value})`.as("voteCount"),
+      // The current user's vote (if logged in)
+      userVote: userId
+        ? sql<number>`sum(case when ${votes.userId} = ${userId} then ${votes.value} else 0 end)`.as(
+            "userVote"
+          )
+        : sql<number>`0`.as("userVote"),
+    })
+    .from(votes)
+    .groupBy(votes.attemptId)
+    .as("voteSq"); // Alias for the subquery
+
+  // 2. Fetch attempts, joining the pre-calculated vote subquery
   const allAttempts = await db
     .select({
       id: attempts.id,
@@ -30,20 +47,20 @@ export default async function Home() {
       createdAt: attempts.createdAt,
       userId: attempts.userId,
       username: users.username,
-      voteCount: sql<number>`CAST(COALESCE(SUM(${votes.value}), 0) AS INTEGER)`,
-      userVote: userId
-        ? sql<
-            number | null
-          >`MAX(CASE WHEN ${votes.userId} = ${userId} THEN ${votes.value} END)`
-        : sql<number | null>`NULL`,
-      commentCount: sql<number>`CAST(COUNT(DISTINCT ${comments.id}) AS INTEGER)`,
+      // Pull data from the subquery, defaulting to 0 if no votes exist
+      voteCount: sql<number>`coalesce(${voteSq.voteCount}, 0)`,
+      userVote: sql<number>`coalesce(${voteSq.userVote}, 0)`,
+      // Count distinct comments to ensure accuracy
+      commentCount: sql<number>`count(distinct ${comments.id})`,
     })
     .from(attempts)
     .leftJoin(users, eq(attempts.userId, users.id))
-    .leftJoin(votes, eq(attempts.id, votes.attemptId))
+    // Join our subquery instead of the raw votes table
+    .leftJoin(voteSq, eq(attempts.id, voteSq.attemptId))
     .leftJoin(comments, eq(attempts.id, comments.attemptId))
-    .groupBy(attempts.id, users.username)
-    .orderBy(desc(attempts.createdAt)); // Newest first
+    // We must group by the new subquery columns as well to avoid SQL errors
+    .groupBy(attempts.id, users.username, voteSq.voteCount, voteSq.userVote)
+    .orderBy(desc(attempts.createdAt));
 
   // Fetch all comments for all attempts to pass to CommentSection
   const allComments = await db
@@ -65,11 +82,16 @@ export default async function Home() {
     <main className="min-h-screen bg-gray-950 text-white p-6">
       {/* --- HEADER SECTION --- */}
       <header className="flex flex-col items-center justify-center py-12 border-b border-gray-800">
-        <h1 className="text-5xl font-extrabold mb-6 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
-          {t("title")}
-        </h1>
-        <h2 className="text-lg text-gray-400">{t("description")}</h2>
-
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <span style={{ whiteSpace: "nowrap" }}>{t("subtitle1")}</span>
+          <h1 className="text-5xl font-extrabold mb-3 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
+            {t("title")}
+          </h1>
+          <span style={{ whiteSpace: "nowrap" }}>{t("subtitle2")}</span>
+        </div>
+        <div className="flex flex-col items-center justify-center mb-4">
+          <h2 className="text-lg text-gray-400 mt-4">{t("description")}</h2>
+        </div>
         <div className="flex gap-4">
           <Link href="/attempts">
             <button className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-2 rounded-full transition-all">
@@ -167,8 +189,8 @@ export default async function Home() {
                   </div>
 
                   {/* Comments */}
-                  <CommentSection 
-                    attemptId={post.id} 
+                  <CommentSection
+                    attemptId={post.id}
                     comments={commentsByAttempt[post.id] || []}
                   />
                 </div>
