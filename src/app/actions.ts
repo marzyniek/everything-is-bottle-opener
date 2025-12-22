@@ -45,3 +45,28 @@ export async function createAttempt(formData: FormData) {
 
   redirect("/");
 }
+
+export async function deleteAttempt(attemptId: string) {
+  const { userId } = await auth();
+
+  if (!userId) throw new Error("You must be logged in");
+
+  // Verify the user owns the attempt before deleting
+  const attempt = await db
+    .select()
+    .from(attempts)
+    .where(eq(attempts.id, attemptId));
+
+  if (attempt.length === 0) {
+    throw new Error("Attempt not found");
+  }
+
+  if (attempt[0].userId !== userId) {
+    throw new Error("You can only delete your own posts");
+  }
+
+  // Delete the attempt
+  await db.delete(attempts).where(eq(attempts.id, attemptId));
+
+  redirect("/");
+}

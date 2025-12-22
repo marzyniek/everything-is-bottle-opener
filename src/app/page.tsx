@@ -1,13 +1,18 @@
 export const dynamic = "force-dynamic"; // <--- ADD THIS LINE
 
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { db } from "@/db";
 import { attempts, users } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
+import { DeleteButton } from "./DeleteButton";
 
 // Mark function as 'async' so we can fetch data
 export default async function Home() {
+  // Get the current user ID
+  const { userId } = await auth();
+
   // 1. Fetch all attempts + the username of the person who uploaded it
   const allAttempts = await db
     .select({
@@ -16,6 +21,7 @@ export default async function Home() {
       toolUsed: attempts.toolUsed,
       beverageBrand: attempts.beverageBrand,
       createdAt: attempts.createdAt,
+      userId: attempts.userId,
       username: users.username, // <--- Get the username from the relation
     })
     .from(attempts)
@@ -90,9 +96,14 @@ export default async function Home() {
                         vs {post.beverageBrand}
                       </p>
                     </div>
-                    <span className="text-xs bg-gray-800 px-2 py-1 rounded text-gray-400">
-                      {new Date(post.createdAt).toLocaleDateString()}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs bg-gray-800 px-2 py-1 rounded text-gray-400">
+                        {new Date(post.createdAt).toLocaleDateString()}
+                      </span>
+                      {userId && post.userId === userId && (
+                        <DeleteButton attemptId={post.id} />
+                      )}
+                    </div>
                   </div>
 
                   <div className="mt-4 pt-4 border-t border-gray-800 flex items-center gap-2 text-sm text-gray-400">
