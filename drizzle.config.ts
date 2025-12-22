@@ -1,11 +1,8 @@
-import "dotenv/config";
-import { defineConfig } from "drizzle-kit";
-
-export default defineConfig({
+export default {
   out: "./drizzle",
   schema: "./src/db/schema.ts",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    url: process.env.DATABASE_URL || "postgresql://localhost:5432/bottle_opener",
   },
-});
+};

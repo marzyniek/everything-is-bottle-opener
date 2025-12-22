@@ -1,10 +1,11 @@
 "use server";
 
 import { db } from "@/db";
-import { attempts, users } from "@/db/schema"; // Import 'users' too
-import { auth, currentUser } from "@clerk/nextjs/server"; // Import 'currentUser'
+import { attempts, users, comments, votes } from "@/db/schema";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export async function createAttempt(formData: FormData) {
   const user = await currentUser(); // Get full user details from Clerk
@@ -69,4 +70,87 @@ export async function deleteAttempt(attemptId: string) {
   await db.delete(attempts).where(eq(attempts.id, attemptId));
 
   redirect("/");
+}
+
+export async function addComment(attemptId: string, content: string) {
+  const user = await currentUser();
+
+  if (!user) throw new Error("You must be logged in");
+
+  // Ensure user exists in DB
+  const existingUser = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, user.id));
+
+  if (existingUser.length === 0) {
+    await db.insert(users).values({
+      id: user.id,
+      email: user.emailAddresses[0].emailAddress,
+      username: user.firstName || "Anonymous",
+    });
+  }
+
+  await db.insert(comments).values({
+    userId: user.id,
+    attemptId: attemptId,
+    content: content,
+  });
+
+  revalidatePath("/");
+  revalidatePath("/attempts");
+  revalidatePath(`/attempts/${attemptId}`);
+}
+
+export async function addVote(attemptId: string, value: number) {
+  const user = await currentUser();
+
+  if (!user) throw new Error("You must be logged in");
+
+  // Ensure user exists in DB
+  const existingUser = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, user.id));
+
+  if (existingUser.length === 0) {
+    await db.insert(users).values({
+      id: user.id,
+      email: user.emailAddresses[0].emailAddress,
+      username: user.firstName || "Anonymous",
+    });
+  }
+
+  // Check if user already voted on this attempt
+  const existingVote = await db
+    .select()
+    .from(votes)
+    .where(and(eq(votes.userId, user.id), eq(votes.attemptId, attemptId)));
+
+  if (existingVote.length > 0) {
+    // Update existing vote
+    if (existingVote[0].value === value) {
+      // If same value, remove vote (toggle off)
+      await db
+        .delete(votes)
+        .where(and(eq(votes.userId, user.id), eq(votes.attemptId, attemptId)));
+    } else {
+      // If different value, update vote
+      await db
+        .update(votes)
+        .set({ value: value })
+        .where(and(eq(votes.userId, user.id), eq(votes.attemptId, attemptId)));
+    }
+  } else {
+    // Create new vote
+    await db.insert(votes).values({
+      userId: user.id,
+      attemptId: attemptId,
+      value: value,
+    });
+  }
+
+  revalidatePath("/");
+  revalidatePath("/attempts");
+  revalidatePath(`/attempts/${attemptId}`);
 }
