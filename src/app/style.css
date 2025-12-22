@@ -38,7 +38,9 @@
   font-weight: 800;
   margin-bottom: 1.5rem;
   letter-spacing: -0.025em;
-  color: rgb(96 165 250); /* Fallback color */
+  /* Set fallback color first for accessibility (visible if gradient fails) */
+  color: rgb(96 165 250);
+  /* Then apply gradient effect, overriding color to transparent */
   background: linear-gradient(to right, rgb(96 165 250), rgb(74 222 128));
   -webkit-background-clip: text;
   background-clip: text;
@@ -231,7 +233,9 @@
 
 /* --- Text Utilities --- */
 .text-gradient {
-  color: rgb(96 165 250); /* Fallback color */
+  /* Set fallback color first for accessibility (visible if gradient fails) */
+  color: rgb(96 165 250);
+  /* Then apply gradient effect, overriding color to transparent */
   background: linear-gradient(to right, rgb(96 165 250), rgb(74 222 128));
   -webkit-background-clip: text;
   background-clip: text;

@@ -65,7 +65,9 @@ $breakpoint-2xl: 1536px;
 }
 
 @mixin gradient-text($from, $to) {
-  color: $from; /* Fallback color */
+  // Set fallback color first for accessibility (visible if gradient fails)
+  color: $from;
+  // Then apply gradient effect, overriding color to transparent
   background: linear-gradient(to right, $from, $to);
   -webkit-background-clip: text;
   background-clip: text;
@@ -334,7 +336,7 @@ $breakpoint-2xl: 1536px;
   display: flex;
   align-items: center;
   gap: $spacing-xs;
-  padding: $spacing-xs $spacing-sm + $spacing-xs;
+  padding: $spacing-xs ($spacing-sm + $spacing-xs); // 0.25rem + 0.75rem = 1rem horizontal padding
   border-radius: $radius-full;
   @include transition-all;
   border: none;
