@@ -1,0 +1,391 @@
+/* ====================================
+   Centralized SCSS Styling for Everything is a Bottle Opener
+   ==================================== */
+
+// --- Variables ---
+$color-background: rgb(3 7 18);
+$color-foreground: white;
+$color-border: rgb(31 41 55);
+$color-border-hover: rgb(55 65 81);
+$color-text-muted: rgb(156 163 175);
+$color-card-bg: rgb(17 24 39);
+$color-input-bg: rgb(31 41 55);
+
+// Colors
+$color-blue-500: rgb(59 130 246);
+$color-blue-600: rgb(37 99 235);
+$color-blue-700: rgb(30 64 175);
+$color-blue-400: rgb(96 165 250);
+
+$color-green-400: rgb(74 222 128);
+$color-green-500: rgb(34 197 94);
+$color-green-600: rgb(22 163 74);
+$color-green-700: rgb(21 128 61);
+
+$color-red-400: rgb(248 113 113);
+$color-red-500: rgb(239 68 68);
+$color-red-600: rgb(220 38 38);
+
+$color-purple-500: rgb(168 85 247);
+$color-purple-600: rgb(147 51 234);
+
+$color-gray-600: rgb(75 85 99);
+$color-gray-700: rgb(55 65 81);
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-2xl: 3rem;
+
+// Border Radius
+$radius-sm: 0.375rem;
+$radius-md: 0.75rem;
+$radius-lg: 0.875rem;
+$radius-full: 9999px;
+
+// Breakpoints
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+// --- Mixins ---
+@mixin transition-all {
+  transition: all 0.2s;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin gradient-text($from, $to) {
+  // Set fallback color first for accessibility (visible if gradient fails)
+  color: $from;
+  // Then apply gradient effect, overriding color to transparent
+  background: linear-gradient(to right, $from, $to);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@mixin card-shadow {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+@mixin hover-lift {
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:hover {
+    transform: translateY(-0.25rem);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+}
+
+// --- Layout & Containers ---
+.container-centered {
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container-centered-wide {
+  max-width: $breakpoint-2xl;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-container {
+  min-height: 100vh;
+  background-color: $color-background;
+  color: $color-foreground;
+  padding: $spacing-lg;
+}
+
+// --- Headers ---
+.header-section {
+  @include flex-center;
+  flex-direction: column;
+  padding-top: $spacing-2xl;
+  padding-bottom: $spacing-2xl;
+  border-bottom: 1px solid $color-border;
+}
+
+.header-title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: $spacing-lg;
+  letter-spacing: -0.025em;
+  @include gradient-text($color-blue-400, $color-green-400);
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: 2.5rem;
+  }
+}
+
+.header-subtitle {
+  font-size: 1.125rem;
+  color: $color-text-muted;
+}
+
+// --- Buttons ---
+.btn-base {
+  font-weight: bold;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-full;
+  @include transition-all;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  @extend .btn-base;
+  background-color: $color-blue-600;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: $color-blue-500;
+  }
+}
+
+.btn-success {
+  @extend .btn-base;
+  background-color: $color-green-600;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: $color-green-500;
+  }
+}
+
+.btn-danger {
+  @extend .btn-base;
+  background-color: $color-red-600;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: $color-red-500;
+  }
+}
+
+.btn-secondary {
+  @extend .btn-base;
+  background-color: $color-gray-700;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: $color-gray-600;
+  }
+}
+
+.btn-purple {
+  @extend .btn-base;
+  background-color: $color-purple-600;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: $color-purple-500;
+  }
+}
+
+// --- Cards ---
+.card {
+  background-color: $color-card-bg;
+  border-radius: $radius-md;
+  overflow: hidden;
+  border: 1px solid $color-border;
+  @include card-shadow;
+  @include transition-all;
+  
+  &:hover {
+    border-color: $color-border-hover;
+  }
+  
+  .card-content {
+    padding: $spacing-md;
+  }
+}
+
+.card-gradient-blue {
+  background: linear-gradient(to bottom right, $color-blue-600, $color-blue-700);
+  border-radius: $radius-md;
+  padding: $spacing-xl;
+  @include card-shadow;
+}
+
+.card-gradient-green {
+  background: linear-gradient(to bottom right, $color-green-600, $color-green-700);
+  border-radius: $radius-md;
+  padding: $spacing-xl;
+  @include card-shadow;
+}
+
+// --- Forms ---
+.form-input {
+  width: 100%;
+  padding: $spacing-sm;
+  border-radius: $radius-sm;
+  background-color: $color-input-bg;
+  border: 1px solid $color-border-hover;
+  color: white;
+  @include transition-all;
+  
+  &:focus {
+    outline: none;
+    border-color: $color-blue-500;
+  }
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: $spacing-xs;
+  color: $color-text-muted;
+}
+
+.form-group {
+  margin-bottom: $spacing-md;
+}
+
+// --- Video Container ---
+.video-container {
+  aspect-ratio: 16 / 9;
+  background-color: black;
+  position: relative;
+  
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+// --- Grid Layouts ---
+.grid-2-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-xl;
+  
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.grid-3-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-lg;
+  
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (min-width: $breakpoint-lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// --- Text Utilities ---
+.text-gradient {
+  @include gradient-text($color-blue-400, $color-green-400);
+}
+
+.text-muted {
+  color: $color-text-muted;
+}
+
+.text-error {
+  color: $color-red-400;
+}
+
+.text-success {
+  color: $color-green-400;
+}
+
+// --- Spacing ---
+.section-spacing {
+  margin-top: $spacing-2xl;
+}
+
+.content-spacing {
+  margin-top: $spacing-lg;
+}
+
+// --- Hover Effects ---
+.hover-lift {
+  @include hover-lift;
+}
+
+// --- Vote Buttons ---
+.vote-button {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-xs $spacing-sm + $spacing-xs;
+  border-radius: $radius-full;
+  @include transition-all;
+  border: none;
+  cursor: pointer;
+  
+  &.vote-button-neutral {
+    background-color: $color-input-bg;
+    color: $color-text-muted;
+    
+    &:hover:not(:disabled) {
+      background-color: $color-border-hover;
+    }
+  }
+  
+  &.vote-button-upvote {
+    background-color: $color-green-600;
+    color: white;
+  }
+  
+  &.vote-button-downvote {
+    background-color: $color-red-600;
+    color: white;
+  }
+}
+
+.vote-count {
+  font-weight: bold;
+  font-size: 1.125rem;
+  
+  &.vote-count-positive {
+    color: $color-green-400;
+  }
+  
+  &.vote-count-negative {
+    color: $color-red-400;
+  }
+  
+  &.vote-count-neutral {
+    color: $color-text-muted;
+  }
+}
+
+// --- Stats Display ---
+.stat-card {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: $spacing-sm;
+}
+
+.stat-label {
+  font-size: 1.25rem;
+}
