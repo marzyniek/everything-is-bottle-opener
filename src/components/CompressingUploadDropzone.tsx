@@ -73,10 +73,6 @@ export function CompressingUploadDropzone({
   }
 
   if (showUploader && compressedFile) {
-    // Create a synthetic FileList to pass to UploadDropzone
-    const dataTransfer = new DataTransfer();
-    dataTransfer.items.add(compressedFile);
-
     return (
       <div className="space-y-4">
         <div className="border-2 border-solid border-green-700 rounded-xl p-4 bg-green-900/20 text-center">

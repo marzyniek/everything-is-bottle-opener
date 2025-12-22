@@ -3,6 +3,11 @@ import { fetchFile, toBlobURL } from "@ffmpeg/util";
 
 let ffmpegInstance: FFmpeg | null = null;
 
+// Configuration constants
+const MAX_VIDEO_WIDTH = 1280;
+const VIDEO_CRF = 28; // Constant Rate Factor (18-28 is good range, higher = more compression)
+const AUDIO_BITRATE = "128k";
+
 /**
  * Initialize FFmpeg instance with WebAssembly files
  * This loads the FFmpeg WASM files from CDN
@@ -15,6 +20,8 @@ async function loadFFmpeg(): Promise<FFmpeg> {
   const ffmpeg = new FFmpeg();
   
   // Load FFmpeg from CDN
+  // Note: Using unpkg.com CDN. For production, consider self-hosting these files
+  // or using integrity checks (SRI) to prevent supply chain attacks
   const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
   await ffmpeg.load({
     coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
@@ -50,19 +57,19 @@ export async function compressVideo(
 
     // Compress video with H.264 codec and reduced bitrate
     // -c:v libx264: Use H.264 video codec
-    // -crf 28: Constant Rate Factor (higher = more compression, 18-28 is good range)
+    // -crf: Constant Rate Factor (higher = more compression)
     // -preset fast: Encoding speed preset
     // -c:a aac: Use AAC audio codec
-    // -b:a 128k: Audio bitrate
-    // -vf scale=1280:-2: Scale video to max 1280px width, maintain aspect ratio
+    // -b:a: Audio bitrate
+    // -vf scale: Scale video to max width, maintain aspect ratio
     await ffmpeg.exec([
       "-i", "input.mp4",
       "-c:v", "libx264",
-      "-crf", "28",
+      "-crf", String(VIDEO_CRF),
       "-preset", "fast",
       "-c:a", "aac",
-      "-b:a", "128k",
-      "-vf", "scale='min(1280,iw)':-2",
+      "-b:a", AUDIO_BITRATE,
+      "-vf", `scale='min(${MAX_VIDEO_WIDTH},iw)':-2`,
       "output.mp4"
     ]);
 
