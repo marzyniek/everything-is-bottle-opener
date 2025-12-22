@@ -50,7 +50,12 @@
 }
 
 /* --- Buttons --- */
-.btn-base {
+/* Base button styles - apply to all buttons */
+.btn-primary,
+.btn-success,
+.btn-danger,
+.btn-secondary,
+.btn-purple {
   font-weight: bold;
   padding: 0.5rem 1.5rem;
   border-radius: 9999px;
@@ -63,6 +68,17 @@
   text-decoration: none;
 }
 
+/* Disabled state for all buttons */
+.btn-primary:disabled,
+.btn-success:disabled,
+.btn-danger:disabled,
+.btn-secondary:disabled,
+.btn-purple:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Button color variants */
 .btn-primary {
   background-color: rgb(37 99 235);
   color: white;
@@ -106,11 +122,6 @@
 
 .btn-purple:hover:not(:disabled) {
   background-color: rgb(168 85 247);
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 /* --- Cards --- */

@@ -38,7 +38,7 @@ Then update `globals.css` to import the SCSS file instead:
 - `.btn-danger` - Red danger/delete button
 - `.btn-secondary` - Gray secondary button
 - `.btn-purple` - Purple accent button
-- All buttons support `:disabled` state
+- All buttons include base styles and support `:disabled` state
 
 ### Cards
 - `.card` - Basic card with dark background and border
