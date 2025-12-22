@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.4",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@uploadthing/react": "^7.3.3",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.1",

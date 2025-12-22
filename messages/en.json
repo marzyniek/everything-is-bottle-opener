@@ -42,7 +42,10 @@
     "toolUsedPlaceholder": "e.g. Lighter, Spoon",
     "beverageBrand": "Beverage Brand",
     "beverageBrandPlaceholder": "e.g. Corona, Coke",
-    "publish": "🚀 Publish"
+    "publish": "🚀 Publish",
+    "dropzone": "Drop your video here or click to browse",
+    "compressing": "Compressing video...",
+    "uploading": "Uploading video..."
   },
   "comments": {
     "hide": "Hide",

@@ -46,7 +46,10 @@
     "toolUsedPlaceholder": "např. zapalovač, lžíce",
     "beverageBrand": "Značka nápoje",
     "beverageBrandPlaceholder": "např. Corona, Cola",
-    "publish": "🚀 Zveřejnit"
+    "publish": "🚀 Zveřejnit",
+    "dropzone": "Přetáhni video sem nebo klikni pro výběr",
+    "compressing": "Komprimování videa...",
+    "uploading": "Nahrávání videa..."
   },
   "comments": {
     "hide": "Skrýt",

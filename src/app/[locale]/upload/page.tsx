@@ -1,10 +1,9 @@
 "use client";
 
-import { UploadDropzone } from "@uploadthing/react";
-import { OurFileRouter } from "../../api/uploadthing/core";
 import { useState, useEffect } from "react";
 import { createAttempt, getExistingToolsAndBrands } from "../actions";
 import { useTranslations } from "next-intl";
+import { CompressingUploadDropzone } from "@/components/CompressingUploadDropzone";
 
 export default function UploadPage() {
   const [videoUrl, setVideoUrl] = useState<string>("");
@@ -31,16 +30,20 @@ export default function UploadPage() {
 
       {/* PHASE 1: The Video Upload */}
       {!videoUrl ? (
-        <div className="border-2 border-dashed border-gray-700 rounded-xl p-6 sm:p-10 bg-gray-900/50 w-full max-w-xl">
-          <UploadDropzone<OurFileRouter, "videoUploader">
-            endpoint="videoUploader"
-            onClientUploadComplete={(res) => {
-              // Capture the URL given by UploadThing
-              setVideoUrl(res[0].url);
+        <div className="w-full max-w-xl">
+          <CompressingUploadDropzone
+            onUploadComplete={(url) => {
+              setVideoUrl(url);
               alert(t("videoUploaded"));
             }}
             onUploadError={(error: Error) => {
               alert(t("error", { message: error.message }));
+            }}
+            translations={{
+              dropzone: t("dropzone"),
+              compressing: t("compressing"),
+              uploading: t("uploading"),
+              error: t("error", { message: "" }),
             }}
           />
         </div>
