@@ -2,7 +2,9 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 
-const isProtectedRoute = createRouteMatcher(["/:locale/upload(.*)"]);
+// Use routing configuration to build locale-aware protected routes
+const localePattern = `/:locale(${routing.locales.join("|")})`;
+const isProtectedRoute = createRouteMatcher([`${localePattern}/upload(.*)`]);
 
 const intlMiddleware = createMiddleware(routing);
 

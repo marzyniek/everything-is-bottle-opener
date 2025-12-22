@@ -10,6 +10,7 @@ import { getTranslations } from "next-intl/server";
 export default async function AttemptsPage() {
   const t = await getTranslations("attempts");
   const tNav = await getTranslations("navigation");
+  const tHome = await getTranslations("home");
   
   // Get all attempts
   const allAttempts = await db
@@ -67,7 +68,7 @@ export default async function AttemptsPage() {
               <UserButton />
               <Link href="/upload">
                 <button className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-2 rounded-full transition-all flex items-center gap-2">
-                  📹 {t("../home.uploadNewAttempt")}
+                  📹 {tHome("uploadNewAttempt")}
                 </button>
               </Link>
             </div>
