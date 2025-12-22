@@ -1,0 +1,323 @@
+/* ====================================
+   Centralized Styling for Everything is a Bottle Opener
+   ==================================== */
+
+/* --- Layout & Containers --- */
+.container-centered {
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container-centered-wide {
+  max-width: 1536px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-container {
+  min-height: 100vh;
+  background-color: rgb(3 7 18);
+  color: white;
+  padding: 1.5rem;
+}
+
+/* --- Headers --- */
+.header-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgb(31 41 55);
+}
+
+.header-title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.025em;
+  background: linear-gradient(to right, rgb(96 165 250), rgb(74 222 128));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.header-subtitle {
+  font-size: 1.125rem;
+  color: rgb(156 163 175);
+}
+
+/* --- Buttons --- */
+.btn-base {
+  font-weight: bold;
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: rgb(37 99 235);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: rgb(59 130 246);
+}
+
+.btn-success {
+  background-color: rgb(22 163 74);
+  color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: rgb(34 197 94);
+}
+
+.btn-danger {
+  background-color: rgb(220 38 38);
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: rgb(239 68 68);
+}
+
+.btn-secondary {
+  background-color: rgb(55 65 81);
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: rgb(75 85 99);
+}
+
+.btn-purple {
+  background-color: rgb(147 51 234);
+  color: white;
+}
+
+.btn-purple:hover:not(:disabled) {
+  background-color: rgb(168 85 247);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Cards --- */
+.card {
+  background-color: rgb(17 24 39);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid rgb(31 41 55);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s;
+}
+
+.card:hover {
+  border-color: rgb(55 65 81);
+}
+
+.card-content {
+  padding: 1rem;
+}
+
+.card-gradient-blue {
+  background: linear-gradient(to bottom right, rgb(37 99 235), rgb(30 64 175));
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.card-gradient-green {
+  background: linear-gradient(to bottom right, rgb(22 163 74), rgb(21 128 61));
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Forms --- */
+.form-input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  background-color: rgb(31 41 55);
+  border: 1px solid rgb(55 65 81);
+  color: white;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: rgb(59 130 246);
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: rgb(156 163 175);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+/* --- Video Container --- */
+.video-container {
+  aspect-ratio: 16 / 9;
+  background-color: black;
+  position: relative;
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* --- Grid Layouts --- */
+.grid-2-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .grid-2-cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.grid-3-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .grid-3-cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-3-cols {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* --- Text Utilities --- */
+.text-gradient {
+  background: linear-gradient(to right, rgb(96 165 250), rgb(74 222 128));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-muted {
+  color: rgb(156 163 175);
+}
+
+.text-error {
+  color: rgb(248 113 113);
+}
+
+.text-success {
+  color: rgb(74 222 128);
+}
+
+/* --- Spacing --- */
+.section-spacing {
+  margin-top: 3rem;
+}
+
+.content-spacing {
+  margin-top: 1.5rem;
+}
+
+/* --- Hover Effects --- */
+.hover-lift {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.hover-lift:hover {
+  transform: translateY(-0.25rem);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* --- Vote Buttons --- */
+.vote-button {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.vote-button-neutral {
+  background-color: rgb(31 41 55);
+  color: rgb(156 163 175);
+}
+
+.vote-button-neutral:hover:not(:disabled) {
+  background-color: rgb(55 65 81);
+}
+
+.vote-button-upvote {
+  background-color: rgb(22 163 74);
+  color: white;
+}
+
+.vote-button-downvote {
+  background-color: rgb(220 38 38);
+  color: white;
+}
+
+.vote-count {
+  font-weight: bold;
+  font-size: 1.125rem;
+}
+
+.vote-count-positive {
+  color: rgb(74 222 128);
+}
+
+.vote-count-negative {
+  color: rgb(248 113 113);
+}
+
+.vote-count-neutral {
+  color: rgb(156 163 175);
+}
+
+/* --- Stats Display --- */
+.stat-card {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 1.25rem;
+}
+
+/* --- Responsive Typography --- */
+@media (max-width: 768px) {
+  .header-title {
+    font-size: 2.5rem;
+  }
+}

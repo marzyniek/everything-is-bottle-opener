@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Import centralized styling */
+@import "./style.css";
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
