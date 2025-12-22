@@ -22,8 +22,15 @@ export function VoteButtons({
       try {
         await addVote(attemptId, value);
       } catch (err) {
-        if (err instanceof Error && err.message === "You must be logged in") {
-          setError("Please sign in to vote");
+        // Handle specific error cases
+        if (err instanceof Error) {
+          if (err.message.includes("logged in")) {
+            setError("Please sign in to vote");
+          } else if (err.message.includes("not found")) {
+            setError("This attempt no longer exists");
+          } else {
+            setError("Failed to vote. Please try again.");
+          }
         } else {
           setError("Failed to vote. Please try again.");
         }

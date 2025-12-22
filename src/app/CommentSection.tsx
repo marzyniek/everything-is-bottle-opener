@@ -35,7 +35,20 @@ export function CommentSection({ attemptId }: { attemptId: string }) {
         setComment("");
         setShowComments(false);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to add comment");
+        // Handle specific error cases
+        if (err instanceof Error) {
+          if (err.message.includes("logged in")) {
+            setError("Please sign in to comment");
+          } else if (err.message.includes("not found")) {
+            setError("This attempt no longer exists");
+          } else if (err.message.includes("email")) {
+            setError("User profile incomplete. Please contact support.");
+          } else {
+            setError("Failed to add comment. Please try again.");
+          }
+        } else {
+          setError("Failed to add comment. Please try again.");
+        }
       }
     });
   };

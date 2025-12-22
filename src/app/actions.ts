@@ -7,8 +7,30 @@ import { redirect } from "next/navigation";
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
+// Helper function to ensure user exists in database
+async function ensureUserExists(user: Awaited<ReturnType<typeof currentUser>>) {
+  if (!user) throw new Error("You must be logged in");
+
+  const existingUser = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, user.id));
+
+  if (existingUser.length === 0) {
+    if (!user.emailAddresses || user.emailAddresses.length === 0) {
+      throw new Error("User email not found");
+    }
+
+    await db.insert(users).values({
+      id: user.id,
+      email: user.emailAddresses[0].emailAddress,
+      username: user.firstName || "Anonymous",
+    });
+  }
+}
+
 export async function createAttempt(formData: FormData) {
-  const user = await currentUser(); // Get full user details from Clerk
+  const user = await currentUser();
 
   if (!user) throw new Error("You must be logged in");
 
@@ -20,23 +42,8 @@ export async function createAttempt(formData: FormData) {
     throw new Error("Missing fields");
   }
 
-  // --- STEP 1: Ensure User Exists in DB ---
-  // Try to find the user in our DB
-  const existingUser = await db
-    .select()
-    .from(users)
-    .where(eq(users.id, user.id));
+  await ensureUserExists(user);
 
-  // If they don't exist, create them locally
-  if (existingUser.length === 0) {
-    await db.insert(users).values({
-      id: user.id,
-      email: user.emailAddresses[0].emailAddress, // Clerk stores emails in an array
-      username: user.firstName || "Anonymous", // Fallback if no name
-    });
-  }
-
-  // --- STEP 2: Save the Attempt ---
   await db.insert(attempts).values({
     userId: user.id,
     videoUrl: videoUrl,
@@ -77,19 +84,7 @@ export async function addComment(attemptId: string, content: string) {
 
   if (!user) throw new Error("You must be logged in");
 
-  // Ensure user exists in DB
-  const existingUser = await db
-    .select()
-    .from(users)
-    .where(eq(users.id, user.id));
-
-  if (existingUser.length === 0) {
-    await db.insert(users).values({
-      id: user.id,
-      email: user.emailAddresses[0].emailAddress,
-      username: user.firstName || "Anonymous",
-    });
-  }
+  await ensureUserExists(user);
 
   // Get the attempt to find the tool name for revalidation
   const attempt = await db
@@ -117,19 +112,7 @@ export async function addVote(attemptId: string, value: number) {
 
   if (!user) throw new Error("You must be logged in");
 
-  // Ensure user exists in DB
-  const existingUser = await db
-    .select()
-    .from(users)
-    .where(eq(users.id, user.id));
-
-  if (existingUser.length === 0) {
-    await db.insert(users).values({
-      id: user.id,
-      email: user.emailAddresses[0].emailAddress,
-      username: user.firstName || "Anonymous",
-    });
-  }
+  await ensureUserExists(user);
 
   // Get the attempt to find the tool name for revalidation
   const attempt = await db
