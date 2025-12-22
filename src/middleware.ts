@@ -10,8 +10,8 @@ const intlMiddleware = createMiddleware(routing);
 
 export default clerkMiddleware(async (auth, req) => {
   // Skip intl middleware for UploadThing API routes
+  // Authentication is handled by UploadThing's own middleware
   if (req.nextUrl.pathname.startsWith('/api/uploadthing')) {
-    if (isProtectedRoute(req)) await auth.protect();
     return;
   }
   
