@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { attempts, users, comments, votes } from "@/db/schema";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function createAttempt(formData: FormData) {
