@@ -5,6 +5,7 @@ import { Link } from "@/i18n/routing";
 import { db } from "@/db";
 import { attempts, users } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
+import VideoPlayer from "../VideoPlayer";
 import { getTranslations } from "next-intl/server";
 
 export default async function AttemptsPage() {
@@ -120,11 +121,10 @@ export default async function AttemptsPage() {
                   {/* Show preview of first video */}
                   {toolAttempts[0] && (
                     <div className="mt-4 aspect-video bg-black rounded-lg overflow-hidden">
-                      <video
-                        src={toolAttempts[0].videoUrl}
+                      <VideoPlayer 
+                        playbackId={toolAttempts[0].videoUrl}
+                        preload="none"
                         className="w-full h-full object-cover"
-                        muted
-                        playsInline
                       />
                     </div>
                   )}

@@ -2,6 +2,15 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Prerequisites
+
+1. Copy `.env.example` to `.env` and fill in the required environment variables:
+   - Database connection string
+   - Clerk authentication keys
+   - Mux API credentials (see [MUX_SETUP.md](./MUX_SETUP.md) for details)
+
+### Running the Development Server
+
 First, run the development server:
 
 ```bash

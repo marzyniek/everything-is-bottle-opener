@@ -9,6 +9,7 @@ import { desc, eq, sql } from "drizzle-orm";
 import { DeleteButton } from "./DeleteButton";
 import { VoteButtons } from "./VoteButtons";
 import { CommentSection } from "./CommentSection";
+import VideoPlayer from "./VideoPlayer";
 import { getTranslations } from "next-intl/server";
 import { groupCommentsByAttempt } from "@/lib/utils";
 
@@ -139,11 +140,10 @@ export default async function Home() {
               >
                 {/* 1. Video Player */}
                 <div className="aspect-video bg-black relative">
-                  <video
-                    src={post.videoUrl}
-                    controls
-                    className="w-full h-full object-contain"
+                  <VideoPlayer 
+                    playbackId={post.videoUrl}
                     preload="metadata"
+                    className="w-full h-full object-contain"
                   />
                 </div>
 
