@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Mux from "@mux/mux-node";
+import { auth } from "@clerk/nextjs/server";
 
 const mux = new Mux({
   tokenId: process.env.MUX_TOKEN_ID!,
@@ -8,6 +9,15 @@ const mux = new Mux({
 
 export async function GET(request: NextRequest) {
   try {
+    // Check if user is logged in
+    const user = await auth();
+    if (!user.userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const uploadId = searchParams.get("uploadId");
 
