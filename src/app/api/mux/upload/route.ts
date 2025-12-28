@@ -24,7 +24,8 @@ export async function POST() {
         playback_policy: ["public"],
         encoding_tier: "baseline",
       },
-      cors_origin: "*",
+      // Allow uploads from the same origin
+      cors_origin: process.env.NEXT_PUBLIC_APP_URL || "*",
     });
 
     return NextResponse.json({

@@ -5,6 +5,10 @@ import { useState, useEffect } from "react";
 import { createAttempt, getExistingToolsAndBrands } from "../actions";
 import { useTranslations } from "next-intl";
 
+// Constants for asset polling
+const MAX_POLLING_ATTEMPTS = 30; // 30 seconds max
+const POLLING_INTERVAL_MS = 1000; // 1 second between polls
+
 export default function UploadPage() {
   const [playbackId, setPlaybackId] = useState<string>("");
   const [uploadId, setUploadId] = useState<string>("");
@@ -63,7 +67,6 @@ export default function UploadPage() {
     
     // Poll for the asset to be ready
     let attempts = 0;
-    const maxAttempts = 30; // 30 seconds max
     
     const checkAsset = async () => {
       try {
@@ -73,9 +76,9 @@ export default function UploadPage() {
         if (data.status === "ready" && data.playbackId) {
           setPlaybackId(data.playbackId);
           alert(t("videoUploaded"));
-        } else if (attempts < maxAttempts) {
+        } else if (attempts < MAX_POLLING_ATTEMPTS) {
           attempts++;
-          setTimeout(checkAsset, 1000);
+          setTimeout(checkAsset, POLLING_INTERVAL_MS);
         } else {
           setUploadError("Video processing timed out. Please try again.");
         }
