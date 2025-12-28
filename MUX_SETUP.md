@@ -31,9 +31,10 @@ MUX_TOKEN_SECRET=your_mux_token_secret
    - When ready, the Mux Playback ID is stored in the database
 
 2. **Playback:**
-   - Videos are played using Mux's streaming URLs in the format:
-     `https://stream.mux.com/{playbackId}.m3u8`
-   - This provides adaptive bitrate streaming for optimal viewing experience
+   - Videos are played using the `MuxPlayer` component from `@mux/mux-player-react`
+   - The player automatically handles HLS streaming (`.m3u8` format) across all browsers
+   - Provides adaptive bitrate streaming for optimal viewing experience
+   - Built-in controls and responsive design
 
 ## Database Schema
 
