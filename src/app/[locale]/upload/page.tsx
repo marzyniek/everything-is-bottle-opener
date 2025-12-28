@@ -23,11 +23,11 @@ export default function UploadPage() {
   useEffect(() => {
     // Fetch existing tools and brands when component mounts
     getExistingToolsAndBrands()
-      .then(data => {
+      .then((data) => {
         setTools(data.tools);
         setBrands(data.brands);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Failed to fetch tools and brands:", error);
         // Continue without suggestions if fetch fails
       });
@@ -41,7 +41,7 @@ export default function UploadPage() {
           method: "POST",
         });
         const data = await response.json();
-        
+
         if (response.ok) {
           setUploadUrl(data.url);
           setUploadId(data.uploadId);
@@ -65,18 +65,18 @@ export default function UploadPage() {
 
   const handleUploadSuccess = async () => {
     setIsUploading(false);
-    
+
     // Poll for the asset to be ready
     let attempts = 0;
-    
+
     const checkAsset = async () => {
       try {
         const response = await fetch(`/api/mux/asset?uploadId=${uploadId}`);
         const data = await response.json();
-        
+
         if (data.status === "ready" && data.playbackId) {
           setPlaybackId(data.playbackId);
-          alert(t("videoUploaded"));
+          //      alert(t("videoUploaded"));
         } else if (attempts < MAX_POLLING_ATTEMPTS) {
           attempts++;
           setTimeout(checkAsset, POLLING_INTERVAL_MS);
@@ -88,7 +88,7 @@ export default function UploadPage() {
         setUploadError("Failed to process video");
       }
     };
-    
+
     checkAsset();
   };
 
@@ -100,7 +100,9 @@ export default function UploadPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 bg-gray-950 text-white">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">{t("title")}</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">
+        {t("title")}
+      </h1>
 
       {/* PHASE 1: The Video Upload */}
       {!playbackId ? (
@@ -136,7 +138,7 @@ export default function UploadPage() {
               }}
               streamType="on-demand"
               autoPlay={false}
-              style={{ width: '100%', aspectRatio: '16/9' }}
+              style={{ width: "100%", aspectRatio: "16/9" }}
             />
           </div>
 
@@ -156,7 +158,7 @@ export default function UploadPage() {
                 className="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white text-base min-h-[44px]"
               />
               <datalist id="tools-list">
-                {tools.map(tool => (
+                {tools.map((tool) => (
                   <option key={tool} value={tool} />
                 ))}
               </datalist>
@@ -174,7 +176,7 @@ export default function UploadPage() {
                 className="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white text-base min-h-[44px]"
               />
               <datalist id="brands-list">
-                {brands.map(brand => (
+                {brands.map((brand) => (
                   <option key={brand} value={brand} />
                 ))}
               </datalist>
