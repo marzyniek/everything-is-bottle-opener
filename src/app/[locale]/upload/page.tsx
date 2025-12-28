@@ -1,6 +1,7 @@
 "use client";
 
 import MuxUploader from "@mux/mux-uploader-react";
+import MuxPlayer from "@mux/mux-player-react";
 import { useState, useEffect } from "react";
 import { createAttempt, getExistingToolsAndBrands } from "../actions";
 import { useTranslations } from "next-intl";
@@ -128,10 +129,14 @@ export default function UploadPage() {
         <div className="w-full max-w-md bg-gray-900 p-4 sm:p-6 rounded-xl border border-gray-800">
           {/* Display video using Mux player */}
           <div className="w-full rounded-lg mb-4 sm:mb-6 bg-black">
-            <video
-              src={`https://stream.mux.com/${playbackId}.m3u8`}
-              controls
-              className="w-full rounded-lg"
+            <MuxPlayer
+              playbackId={playbackId}
+              metadata={{
+                video_title: "Bottle Opening Attempt",
+              }}
+              streamType="on-demand"
+              autoPlay={false}
+              style={{ width: '100%', aspectRatio: '16/9' }}
             />
           </div>
 
