@@ -140,7 +140,7 @@ export default async function Home() {
                 {/* 1. Video Player */}
                 <div className="aspect-video bg-black relative">
                   <video
-                    src={post.videoUrl}
+                    src={`https://stream.mux.com/${post.videoUrl}.m3u8`}
                     controls
                     className="w-full h-full object-contain"
                     preload="metadata"

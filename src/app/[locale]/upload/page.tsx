@@ -1,15 +1,18 @@
 "use client";
 
-import { UploadDropzone } from "@uploadthing/react";
-import { OurFileRouter } from "../../api/uploadthing/core";
+import MuxUploader from "@mux/mux-uploader-react";
 import { useState, useEffect } from "react";
 import { createAttempt, getExistingToolsAndBrands } from "../actions";
 import { useTranslations } from "next-intl";
 
 export default function UploadPage() {
-  const [videoUrl, setVideoUrl] = useState<string>("");
+  const [playbackId, setPlaybackId] = useState<string>("");
+  const [uploadId, setUploadId] = useState<string>("");
+  const [uploadUrl, setUploadUrl] = useState<string>("");
   const [tools, setTools] = useState<string[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string>("");
   const t = useTranslations("upload");
 
   useEffect(() => {
@@ -25,37 +28,113 @@ export default function UploadPage() {
       });
   }, []);
 
+  // Create upload URL when component mounts
+  useEffect(() => {
+    const createUpload = async () => {
+      try {
+        const response = await fetch("/api/mux/upload", {
+          method: "POST",
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+          setUploadUrl(data.url);
+          setUploadId(data.uploadId);
+        } else {
+          console.error("Failed to create upload:", data.error);
+          setUploadError(data.error || "Failed to create upload");
+        }
+      } catch (error) {
+        console.error("Error creating upload:", error);
+        setUploadError("Failed to initialize upload");
+      }
+    };
+
+    createUpload();
+  }, []);
+
+  const handleUploadStart = () => {
+    setIsUploading(true);
+    setUploadError("");
+  };
+
+  const handleUploadSuccess = async () => {
+    setIsUploading(false);
+    
+    // Poll for the asset to be ready
+    let attempts = 0;
+    const maxAttempts = 30; // 30 seconds max
+    
+    const checkAsset = async () => {
+      try {
+        const response = await fetch(`/api/mux/asset?uploadId=${uploadId}`);
+        const data = await response.json();
+        
+        if (data.status === "ready" && data.playbackId) {
+          setPlaybackId(data.playbackId);
+          alert(t("videoUploaded"));
+        } else if (attempts < maxAttempts) {
+          attempts++;
+          setTimeout(checkAsset, 1000);
+        } else {
+          setUploadError("Video processing timed out. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error checking asset:", error);
+        setUploadError("Failed to process video");
+      }
+    };
+    
+    checkAsset();
+  };
+
+  const handleUploadError = () => {
+    setIsUploading(false);
+    setUploadError("Upload failed");
+    alert(t("error", { message: "Upload failed" }));
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 bg-gray-950 text-white">
       <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center">{t("title")}</h1>
 
       {/* PHASE 1: The Video Upload */}
-      {!videoUrl ? (
+      {!playbackId ? (
         <div className="border-2 border-dashed border-gray-700 rounded-xl p-6 sm:p-10 bg-gray-900/50 w-full max-w-xl">
-          <UploadDropzone<OurFileRouter, "videoUploader">
-            endpoint="videoUploader"
-            onClientUploadComplete={(res) => {
-              // Capture the URL given by UploadThing
-              setVideoUrl(res[0].url);
-              alert(t("videoUploaded"));
-            }}
-            onUploadError={(error: Error) => {
-              alert(t("error", { message: error.message }));
-            }}
-          />
+          {uploadError && (
+            <div className="mb-4 p-3 bg-red-900/50 border border-red-700 rounded text-red-200">
+              {uploadError}
+            </div>
+          )}
+          {uploadUrl && (
+            <MuxUploader
+              endpoint={uploadUrl}
+              onUploadStart={handleUploadStart}
+              onSuccess={handleUploadSuccess}
+              onError={handleUploadError}
+            />
+          )}
+          {isUploading && (
+            <div className="mt-4 text-center text-gray-400">
+              Uploading video...
+            </div>
+          )}
         </div>
       ) : (
         /* PHASE 2: The Details Form */
         <div className="w-full max-w-md bg-gray-900 p-4 sm:p-6 rounded-xl border border-gray-800">
-          <video
-            src={videoUrl}
-            controls
-            className="w-full rounded-lg mb-4 sm:mb-6 bg-black"
-          />
+          {/* Display video using Mux player */}
+          <div className="w-full rounded-lg mb-4 sm:mb-6 bg-black">
+            <video
+              src={`https://stream.mux.com/${playbackId}.m3u8`}
+              controls
+              className="w-full rounded-lg"
+            />
+          </div>
 
           <form action={createAttempt} className="flex flex-col gap-4">
-            {/* HIDDEN INPUT: Pass the URL to the server action */}
-            <input type="hidden" name="videoUrl" value={videoUrl} />
+            {/* HIDDEN INPUT: Pass the playback ID to the server action */}
+            <input type="hidden" name="videoUrl" value={playbackId} />
 
             <div>
               <label className="block text-sm font-medium mb-1 text-gray-400">

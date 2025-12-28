@@ -121,7 +121,7 @@ export default async function AttemptsPage() {
                   {toolAttempts[0] && (
                     <div className="mt-4 aspect-video bg-black rounded-lg overflow-hidden">
                       <video
-                        src={toolAttempts[0].videoUrl}
+                        src={`https://stream.mux.com/${toolAttempts[0].videoUrl}.m3u8`}
                         className="w-full h-full object-cover"
                         muted
                         playsInline
