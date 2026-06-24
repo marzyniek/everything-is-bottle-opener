@@ -1,10 +1,10 @@
 "use client";
 
 import MuxUploader from "@mux/mux-uploader-react";
-import MuxPlayer from "@mux/mux-player-react";
 import { useState, useEffect } from "react";
 import { createAttempt, getExistingToolsAndBrands } from "../actions";
 import { useTranslations } from "next-intl";
+import VideoPlayer from "../VideoPlayer";
 
 // Constants for asset polling
 const MAX_POLLING_ATTEMPTS = 30; // 30 seconds max
@@ -76,7 +76,6 @@ export default function UploadPage() {
 
         if (data.status === "ready" && data.playbackId) {
           setPlaybackId(data.playbackId);
-          //      alert(t("videoUploaded"));
         } else if (attempts < MAX_POLLING_ATTEMPTS) {
           attempts++;
           setTimeout(checkAsset, POLLING_INTERVAL_MS);
@@ -122,24 +121,15 @@ export default function UploadPage() {
           )}
           {isUploading && (
             <div className="mt-4 text-center text-gray-400">
-              Uploading video...
+              {t("uploading")}
             </div>
           )}
         </div>
       ) : (
         /* PHASE 2: The Details Form */
         <div className="w-full max-w-md bg-gray-900 p-4 sm:p-6 rounded-xl border border-gray-800">
-          {/* Display video using Mux player */}
-          <div className="w-full rounded-lg mb-4 sm:mb-6 bg-black">
-            <MuxPlayer
-              playbackId={playbackId}
-              metadata={{
-                video_title: "Bottle Opening Attempt",
-              }}
-              streamType="on-demand"
-              autoPlay={false}
-              style={{ width: "100%", aspectRatio: "16/9" }}
-            />
+          <div className="w-full rounded-lg mb-4 sm:mb-6 bg-black aspect-video">
+            <VideoPlayer playbackId={playbackId} className="w-full h-full" />
           </div>
 
           <form action={createAttempt} className="flex flex-col gap-4">

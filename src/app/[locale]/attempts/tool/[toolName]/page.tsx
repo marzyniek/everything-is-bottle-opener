@@ -95,10 +95,11 @@ export default async function ToolPage({
         </h1>
 
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
-          <Link href="/attempts">
-            <button className="bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-3 rounded-full transition-all w-full sm:w-auto">
-              ← {tNav("backToAllAttempts")}
-            </button>
+          <Link
+            href="/attempts"
+            className="bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-3 rounded-full transition-all w-full sm:w-auto text-center"
+          >
+            ← {tNav("backToAllAttempts")}
           </Link>
 
           <SignedOut>
@@ -112,10 +113,11 @@ export default async function ToolPage({
           <SignedIn>
             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
               <UserButton />
-              <Link href="/upload" className="w-full sm:w-auto">
-                <button className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-full transition-all flex items-center justify-center gap-2 w-full">
-                  📹 {tHome("uploadNewAttempt")}
-                </button>
+              <Link
+                href="/upload"
+                className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-full transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
+              >
+                {tHome("uploadNewAttempt")}
               </Link>
             </div>
           </SignedIn>

@@ -1,8 +1,3 @@
-// Utility functions
-
-/**
- * Groups comments by attemptId for easy lookup
- */
 export function groupCommentsByAttempt<T extends { attemptId: string }>(
   comments: T[]
 ): Record<string, T[]> {

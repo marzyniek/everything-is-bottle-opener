@@ -3,11 +3,11 @@
 import { db } from "@/db";
 import { attempts, users, comments, votes } from "@/db/schema";
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/routing";
+import { getLocale } from "next-intl/server";
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-// Helper function to ensure user exists in database
 async function ensureUserExists(user: Awaited<ReturnType<typeof currentUser>>) {
   if (!user) throw new Error("You must be logged in");
 
@@ -46,12 +46,13 @@ export async function createAttempt(formData: FormData) {
 
   await db.insert(attempts).values({
     userId: user.id,
-    videoUrl: videoUrl,
-    toolUsed: toolUsed,
-    beverageBrand: beverageBrand,
+    videoUrl,
+    toolUsed,
+    beverageBrand,
   });
 
-  redirect("/");
+  const locale = await getLocale();
+  redirect({ href: "/", locale });
 }
 
 export async function deleteAttempt(attemptId: string) {
@@ -59,7 +60,6 @@ export async function deleteAttempt(attemptId: string) {
 
   if (!userId) throw new Error("You must be logged in");
 
-  // Verify the user owns the attempt before deleting
   const attempt = await db
     .select({ userId: attempts.userId })
     .from(attempts)
@@ -73,10 +73,10 @@ export async function deleteAttempt(attemptId: string) {
     throw new Error("You can only delete your own posts");
   }
 
-  // Delete the attempt
   await db.delete(attempts).where(eq(attempts.id, attemptId));
 
-  redirect("/");
+  const locale = await getLocale();
+  redirect({ href: "/", locale });
 }
 
 export async function addComment(attemptId: string, content: string) {
@@ -86,7 +86,6 @@ export async function addComment(attemptId: string, content: string) {
 
   await ensureUserExists(user);
 
-  // Get the attempt to find the tool name for revalidation
   const attempt = await db
     .select({ toolUsed: attempts.toolUsed })
     .from(attempts)
@@ -98,8 +97,8 @@ export async function addComment(attemptId: string, content: string) {
 
   await db.insert(comments).values({
     userId: user.id,
-    attemptId: attemptId,
-    content: content,
+    attemptId,
+    content,
   });
 
   revalidatePath("/");
@@ -114,7 +113,6 @@ export async function addVote(attemptId: string, value: number) {
 
   await ensureUserExists(user);
 
-  // Get the attempt to find the tool name for revalidation
   const attempt = await db
     .select({ toolUsed: attempts.toolUsed })
     .from(attempts)
@@ -124,32 +122,28 @@ export async function addVote(attemptId: string, value: number) {
     throw new Error("Attempt not found");
   }
 
-  // Check if user already voted on this attempt
   const existingVote = await db
     .select()
     .from(votes)
     .where(and(eq(votes.userId, user.id), eq(votes.attemptId, attemptId)));
 
   if (existingVote.length > 0) {
-    // Update existing vote
     if (existingVote[0].value === value) {
-      // If same value, remove vote (toggle off)
+      // same value → toggle off
       await db
         .delete(votes)
         .where(and(eq(votes.userId, user.id), eq(votes.attemptId, attemptId)));
     } else {
-      // If different value, update vote
       await db
         .update(votes)
-        .set({ value: value })
+        .set({ value })
         .where(and(eq(votes.userId, user.id), eq(votes.attemptId, attemptId)));
     }
   } else {
-    // Create new vote
     await db.insert(votes).values({
       userId: user.id,
-      attemptId: attemptId,
-      value: value,
+      attemptId,
+      value,
     });
   }
 
@@ -159,7 +153,6 @@ export async function addVote(attemptId: string, value: number) {
 }
 
 export async function getExistingToolsAndBrands() {
-  // Fetch all unique tools and beverage brands
   const allAttempts = await db
     .select({
       toolUsed: attempts.toolUsed,
@@ -167,8 +160,8 @@ export async function getExistingToolsAndBrands() {
     })
     .from(attempts);
 
-  const tools = Array.from(new Set(allAttempts.map(a => a.toolUsed))).sort();
-  const brands = Array.from(new Set(allAttempts.map(a => a.beverageBrand))).sort();
+  const tools = Array.from(new Set(allAttempts.map((a) => a.toolUsed))).sort();
+  const brands = Array.from(new Set(allAttempts.map((a) => a.beverageBrand))).sort();
 
   return { tools, brands };
 }

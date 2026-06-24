@@ -1,9 +1,8 @@
 import { pgTable, text, timestamp, uuid, integer } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-// 1. Users Table
 export const users = pgTable("users", {
-  id: text("id").primaryKey(), // Changed from uuid to text to match Clerk ID
+  id: text("id").primaryKey(), // Clerk user ID (text, not UUID)
   email: text("email").notNull(),
   username: text("username"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -21,7 +20,6 @@ export const attempts = pgTable("attempts", {
     .references(() => users.id, { onDelete: "cascade" }),
 });
 
-// Comments Table
 export const comments = pgTable("comments", {
   id: uuid("id").defaultRandom().primaryKey(),
   content: text("content").notNull(),
@@ -34,10 +32,9 @@ export const comments = pgTable("comments", {
     .references(() => attempts.id, { onDelete: "cascade" }),
 });
 
-// Votes Table
 export const votes = pgTable("votes", {
   id: uuid("id").defaultRandom().primaryKey(),
-  value: integer("value").notNull(), // 1 for upvote, -1 for downvote
+  value: integer("value").notNull(), // 1 = upvote, -1 = downvote
   createdAt: timestamp("created_at").defaultNow().notNull(),
   userId: text("user_id")
     .notNull()

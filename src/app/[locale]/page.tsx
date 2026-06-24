@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic"; // <--- ADD THIS LINE
+export const dynamic = "force-dynamic";
 
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
@@ -13,21 +13,16 @@ import VideoPlayer from "./VideoPlayer";
 import { getTranslations } from "next-intl/server";
 import { groupCommentsByAttempt } from "@/lib/utils";
 
-// Mark function as 'async' so we can fetch data
 export default async function Home() {
-  // Get the current user ID
   const { userId } = await auth();
   const t = await getTranslations("home");
   const tCommon = await getTranslations("common");
   const tNav = await getTranslations("navigation");
 
-  // Fetch all attempts + the username of the person who uploaded it + vote counts
   const voteSq = db
     .select({
       attemptId: votes.attemptId,
-      // Sum of all votes for the attempt
       voteCount: sql<number>`sum(${votes.value})`.as("voteCount"),
-      // The current user's vote (if logged in)
       userVote: userId
         ? sql<number>`sum(case when ${votes.userId} = ${userId} then ${votes.value} else 0 end)`.as(
             "userVote"
@@ -36,9 +31,8 @@ export default async function Home() {
     })
     .from(votes)
     .groupBy(votes.attemptId)
-    .as("voteSq"); // Alias for the subquery
+    .as("voteSq");
 
-  // 2. Fetch attempts, joining the pre-calculated vote subquery
   const allAttempts = await db
     .select({
       id: attempts.id,
@@ -48,22 +42,17 @@ export default async function Home() {
       createdAt: attempts.createdAt,
       userId: attempts.userId,
       username: users.username,
-      // Pull data from the subquery, defaulting to 0 if no votes exist
-      voteCount: sql<number>`coalesce(${voteSq.voteCount}, 0)`,
-      userVote: sql<number>`coalesce(${voteSq.userVote}, 0)`,
-      // Count distinct comments to ensure accuracy
-      commentCount: sql<number>`count(distinct ${comments.id})`,
+      voteCount: sql<number>`CAST(COALESCE(${voteSq.voteCount}, 0) AS INTEGER)`,
+      userVote: sql<number>`CAST(COALESCE(${voteSq.userVote}, 0) AS INTEGER)`,
+      commentCount: sql<number>`CAST(COUNT(DISTINCT ${comments.id}) AS INTEGER)`,
     })
     .from(attempts)
     .leftJoin(users, eq(attempts.userId, users.id))
-    // Join our subquery instead of the raw votes table
     .leftJoin(voteSq, eq(attempts.id, voteSq.attemptId))
     .leftJoin(comments, eq(attempts.id, comments.attemptId))
-    // We must group by the new subquery columns as well to avoid SQL errors
     .groupBy(attempts.id, users.username, voteSq.voteCount, voteSq.userVote)
     .orderBy(desc(attempts.createdAt));
 
-  // Fetch all comments for all attempts to pass to CommentSection
   const allComments = await db
     .select({
       id: comments.id,
@@ -76,7 +65,6 @@ export default async function Home() {
     .leftJoin(users, eq(comments.userId, users.id))
     .orderBy(comments.createdAt);
 
-  // Group comments by attemptId for easy lookup
   const commentsByAttempt = groupCommentsByAttempt(allComments);
 
   return (
@@ -94,10 +82,11 @@ export default async function Home() {
           <h2 className="text-base sm:text-lg text-gray-400 mt-4 text-center px-4">{t("description")}</h2>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full px-4 sm:w-auto">
-          <Link href="/attempts">
-            <button className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-3 rounded-full transition-all w-full sm:w-auto">
-              {t("viewAllAttempts")}
-            </button>
+          <Link
+            href="/attempts"
+            className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-3 rounded-full transition-all w-full sm:w-auto text-center"
+          >
+            {t("viewAllAttempts")}
           </Link>
 
           <SignedOut>
@@ -111,10 +100,11 @@ export default async function Home() {
           <SignedIn>
             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
               <UserButton />
-              <Link href="/upload" className="w-full sm:w-auto">
-                <button className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-full transition-all flex items-center justify-center gap-2 w-full">
-                  {t("uploadNewAttempt")}
-                </button>
+              <Link
+                href="/upload"
+                className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-full transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
+              >
+                {t("uploadNewAttempt")}
               </Link>
             </div>
           </SignedIn>

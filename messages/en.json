@@ -16,8 +16,11 @@
   },
   "home": {
     "title": "Bottle Opener 🍾",
-    "viewAllAttempts": "📊 View All Attempts",
-    "uploadNewAttempt": "📹 Upload New Attempt",
+    "subtitle1": "A wise person once said:",
+    "subtitle2": "and it was true.",
+    "description": "Discover the art of bottle opening and master it with us!",
+    "viewAllAttempts": "Tools Used So Far 🍻",
+    "uploadNewAttempt": "Upload New Attempt 🍺",
     "latestAttempts": "Latest Attempts",
     "noAttemptsYet": "No attempts yet. Be the first!",
     "comment": "comment",
@@ -25,6 +28,7 @@
   },
   "attempts": {
     "title": "All Attempts 🍾",
+    "uploadNewAttempt": "Upload New Attempt 🍺",
     "totalBottlesOpened": "Total Bottles Opened",
     "differentToolsUsed": "Different Tools Used",
     "browseByTool": "Browse by Tool",
@@ -35,7 +39,8 @@
     "noAttemptsFoundForTool": "No attempts found for this tool."
   },
   "upload": {
-    "title": "Upload Your Attempt 🍾",
+    "title": "Share Your Success 🍾",
+    "uploading": "Uploading video...",
     "videoUploaded": "Video uploaded! Now add details.",
     "error": "Error: {message}",
     "toolUsed": "Tool Used",
@@ -66,6 +71,7 @@
     "errorGeneric": "Failed to vote. Please try again."
   },
   "delete": {
-    "title": "Delete post"
+    "title": "Delete post",
+    "error": "Failed to delete post. Please try again."
   }
 }

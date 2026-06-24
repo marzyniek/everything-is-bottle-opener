@@ -40,6 +40,7 @@
   },
   "upload": {
     "title": "Poděl se o svůj úspěch 🍾",
+    "uploading": "Nahrávám video...",
     "videoUploaded": "Video nahráno! Teď přidej detaily.",
     "error": "Chyba: {message}",
     "toolUsed": "Použitý nástroj",
@@ -70,6 +71,7 @@
     "errorGeneric": "Hlasování se nezdařilo. Zkus to prosím znovu."
   },
   "delete": {
-    "title": "Smazat příspěvek"
+    "title": "Smazat příspěvek",
+    "error": "Nepodařilo se smazat příspěvek. Zkus to prosím znovu."
   }
 }

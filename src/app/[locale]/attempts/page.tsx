@@ -48,10 +48,11 @@ export default async function AttemptsPage() {
         </h1>
 
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
-          <Link href="/">
-            <button className="bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-3 rounded-full transition-all w-full sm:w-auto">
-              ← {tNav("backToFeed")}
-            </button>
+          <Link
+            href="/"
+            className="bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-3 rounded-full transition-all w-full sm:w-auto text-center"
+          >
+            ← {tNav("backToFeed")}
           </Link>
 
           <SignedOut>
@@ -65,10 +66,11 @@ export default async function AttemptsPage() {
           <SignedIn>
             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
               <UserButton />
-              <Link href="/upload" className="w-full sm:w-auto">
-                <button className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-full transition-all flex items-center justify-center gap-2 w-full">
-                  📹 {t("uploadNewAttempt")}
-                </button>
+              <Link
+                href="/upload"
+                className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-full transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
+              >
+                {t("uploadNewAttempt")}
               </Link>
             </div>
           </SignedIn>
