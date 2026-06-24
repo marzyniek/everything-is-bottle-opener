@@ -20,7 +20,7 @@ export default async function ToolPage({
 }) {
   const { userId } = await auth();
   const awaitedParams = await params;
-  const toolName = decodeURIComponent(awaitedParams.toolName);
+  const toolName = decodeURIComponent(awaitedParams.toolName).trim();
   const t = await getTranslations("attempts");
   const tNav = await getTranslations("navigation");
   const tCommon = await getTranslations("common");

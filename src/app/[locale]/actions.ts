@@ -35,8 +35,8 @@ export async function createAttempt(formData: FormData) {
   if (!user) throw new Error("You must be logged in");
 
   const videoUrl = formData.get("videoUrl") as string;
-  const toolUsed = formData.get("toolUsed") as string;
-  const beverageBrand = formData.get("beverageBrand") as string;
+  const toolUsed = (formData.get("toolUsed") as string)?.trim();
+  const beverageBrand = (formData.get("beverageBrand") as string)?.trim();
 
   if (!videoUrl || !toolUsed || !beverageBrand) {
     throw new Error("Missing fields");
